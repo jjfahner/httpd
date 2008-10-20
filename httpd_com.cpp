@@ -73,45 +73,6 @@ Server::get_Sites(ISites** sites)
 }
 
 HRESULT STDMETHODCALLTYPE 
-Server::GetSite(BSTR name, ISite **site)
-{
-  *site = 0;
-
-  // Find site
-  http_site* p = httpd.get_site(name);
-  if(p == 0)
-  {
-    return E_FAIL;
-  }
-
-  // Create the site instance
-  return CreateSite(p, site);
-}
-
-HRESULT STDMETHODCALLTYPE 
-Server::AddSite(BSTR name, ISite **site)
-{
-  *site = 0;
-
-  // Check site
-  http_site* p = httpd.get_site(name);
-  if(p == 0)
-  {
-    p = new http_site(name, true);
-    httpd.add_site(p);
-  }
-
-  // Create the site instance
-  return CreateSite(p, site);
-}
-
-HRESULT STDMETHODCALLTYPE 
-Server::RemoveSite(BSTR name)
-{
-  return E_FAIL;
-}
-
-HRESULT STDMETHODCALLTYPE 
 Server::Start()
 {
   httpd.start();
@@ -190,19 +151,35 @@ HRESULT STDMETHODCALLTYPE
 Sites::get__NewEnum(IUnknown **ppUnk)
 {
   *ppUnk = 0;
-  return S_OK;
+  return E_FAIL;
 }
 
 HRESULT STDMETHODCALLTYPE 
-Sites::get_Item(BSTR name, ISite **site)
+Sites::get_Item(VARIANT index, ISite **site)
 {
   *site = 0;
+  http_site* p = 0;
 
-  // Find site
-  http_site* p = httpd.get_site(name);
+  // Find site for index
+  if(index.vt == VT_INT || index.vt == VT_I4)
+  {
+    if(index.intVal < (int)httpd.sites().size())
+    {
+      http_daemon::site_iterator it;
+      it = httpd.site_begin();
+      std::advance(it, index.intVal);
+      p = it->second;
+    }
+  }
+  else if(index.vt == VT_BSTR)
+  {
+    p = httpd.get_site(index.bstrVal);
+  }
+  
+  // No site found
   if(p == 0)
   {
-    return E_FAIL;
+    return E_INVALIDARG;
   }
 
   // Create the site instance
@@ -217,10 +194,18 @@ Sites::get_Count(long *pVal)
 }
 
 HRESULT STDMETHODCALLTYPE 
-Sites::Add(BSTR name, ISite **pSite)
+Sites::Add(BSTR name, ISite **site)
 {
-  *pSite = 0;
-  return S_OK;
+  // Find existing site by name
+  http_site* p = httpd.get_site(name);
+  if(p == 0)
+  {
+    p = new http_site(name, true);
+    httpd.add_site(p);
+  }
+
+  // Create the site instance
+  return CreateSite(p, site);
 }
 
 //////////////////////////////////////////////////////////////////////////

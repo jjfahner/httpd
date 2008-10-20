@@ -27,9 +27,6 @@ public:
   virtual HRESULT STDMETHODCALLTYPE get_Logfile(BSTR *filename);
   virtual HRESULT STDMETHODCALLTYPE put_Logfile(BSTR filename);
   virtual HRESULT STDMETHODCALLTYPE get_Sites(ISites** sites);
-  virtual HRESULT STDMETHODCALLTYPE GetSite(BSTR name, ISite **site);
-  virtual HRESULT STDMETHODCALLTYPE AddSite(BSTR name, ISite **site);
-  virtual HRESULT STDMETHODCALLTYPE RemoveSite(BSTR name);
   virtual HRESULT STDMETHODCALLTYPE Start();
   virtual HRESULT STDMETHODCALLTYPE Stop();
 
@@ -127,9 +124,9 @@ public:
   // Implement ISites
   //
   virtual HRESULT STDMETHODCALLTYPE get__NewEnum(IUnknown **ppUnk);
-  virtual HRESULT STDMETHODCALLTYPE get_Item(BSTR name, ISite **pSite);
+  virtual HRESULT STDMETHODCALLTYPE get_Item(VARIANT index, ISite **site);
   virtual HRESULT STDMETHODCALLTYPE get_Count(long *pVal);
-  virtual HRESULT STDMETHODCALLTYPE Add(BSTR name, ISite **pSite);
+  virtual HRESULT STDMETHODCALLTYPE Add(BSTR name, ISite **site);
 
   //
   // COM interface map
