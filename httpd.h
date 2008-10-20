@@ -76,6 +76,11 @@ public:
   http_site* get_site(String const& name) const;
 
   //
+  // Retrieve sites
+  //
+  site_map const& sites() const;
+
+  //
   // Site enumerators
   //
   site_iterator site_begin() const;
@@ -148,6 +153,12 @@ private:
 //
 // Inline implementations
 //
+
+inline http_daemon::site_map const& 
+http_daemon::sites() const
+{
+  return m_sites;
+}
 
 inline String const& 
 http_daemon::logfile() const
