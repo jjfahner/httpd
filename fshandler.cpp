@@ -33,6 +33,10 @@ filesystem_handler::handler_impl(http_context& context)
   // Set last modified date
   context.response.headers["Last-Modified"] = omd.str();
 
+  // Send expiry of 1 day to lessen load
+  // TODO make configurable
+  context.response.headers["Expires"] = httpdate().add_seconds(86400);
+
   // Enable caching
   // TODO if there's any security, this is wrong !
   context.response.headers["Cache-Control"] = "public";
