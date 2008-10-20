@@ -3,7 +3,7 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-CComModule g_module;
+CComModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
   OBJECT_ENTRY(CLSID_Server, Server)
@@ -19,11 +19,11 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID)
   switch(dwReason)
   {
   case DLL_PROCESS_ATTACH:
-    g_module.Init(ObjectMap, hInstance, &LIBID_HTTPD);
+    _Module.Init(ObjectMap, hInstance, &LIBID_HTTPD);
     DisableThreadLibraryCalls(hInstance); // TODO
     break;
   case DLL_PROCESS_DETACH:
-    g_module.Term();
+    _Module.Term();
     break;
   }
   return TRUE;
@@ -33,28 +33,28 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID)
 
 STDAPI DllCanUnloadNow()
 {
-  return g_module.GetLockCount() == 0 ? S_OK : S_FALSE;
+  return _Module.GetLockCount() == 0 ? S_OK : S_FALSE;
 }
 
 //////////////////////////////////////////////////////////////////////////
 
 STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
 {
-  return g_module.GetClassObject(rclsid, riid, ppv);
+  return _Module.GetClassObject(rclsid, riid, ppv);
 }
 
 //////////////////////////////////////////////////////////////////////////
 
 STDAPI DllRegisterServer()
 {
-   return g_module.RegisterServer(TRUE);
+   return _Module.RegisterServer(TRUE);
 }
 
 //////////////////////////////////////////////////////////////////////////
 
 STDAPI DllUnregisterServer()
 {
-  return g_module.UnregisterServer(TRUE);
+  return _Module.UnregisterServer(TRUE);
 }
 
 //////////////////////////////////////////////////////////////////////////

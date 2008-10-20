@@ -1,6 +1,7 @@
 #include "precomp.h"
 #include "httpd_com.h"
 #include "httpd_i.c"
+#include "httpd.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -27,14 +28,18 @@ Server::RemoveSite(BSTR name)
 HRESULT STDMETHODCALLTYPE 
 Server::Start()
 {
+  httpd.start();
   return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE 
 Server::Stop()
 {
+  httpd.stop();
   return S_OK;
 }
+
+//////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////
 
