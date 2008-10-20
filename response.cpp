@@ -204,88 +204,25 @@ http_response::send(char const* data, int size)
     size = strlen(data);
   }
 
-  // If not chunked encoding, send immediately
-  if(headers["Transfer-Encoding"] != "chunked")
+  // Send chunk
+  if(version() == httpver_1_0)
   {
     m_con.send(data, size);
-    return;
   }
-
-  // Do chunked encoding
-  while(size)
+  else
   {
-    // Prepare buffer for chunked encoding
-    if(m_bufptr == m_buffer)
-    {
-      strcpy_s(m_bufptr, RESPONSE_BUFSIZE, "0000\r\n");
-      m_bufptr += 6;
-    }
-
-    // Calc remaining space
-    size_t avail = RESPONSE_BUFSIZE - (m_bufptr - m_buffer) - 2;
-
-    // Calc bytes to copy
-    size_t copylen = min((size_t)size, avail);
-
-    // Append as much of the buffer as possible
-    memcpy(m_bufptr, data, copylen);
-    m_bufptr += copylen;
-    size -= copylen;
-
-    // If full, flush the buffer
-    if(avail == 0)
-    {
-      flush();
-    }
+    // TODO build in buffer
+    char hdr[15];
+    sprintf(hdr, "%x\r\n", size);
+    m_con.send(hdr, strlen(hdr));
+    m_con.send(data, size);
+    m_con.send("\r\n", 2);
   }
-
-//     else
-//     {
-//       // TODO build in buffer
-//       char hdr[15];
-//       sprintf(hdr, "%x\r\n", size);
-//       m_con.send(hdr, strlen(hdr));
-//       m_con.send(data, size);
-//       m_con.send("\r\n", 2);
-//     }
-//   }
-// 
-
 }
 
 void 
 http_response::flush()
 {
-  // No chunked encoding means no flush required
-  if(headers["Transfer-Encoding"] != "chunked")
-  {
-    return;
-  }
- 
-  // Calculate current length
-  size_t writelen = m_bufptr - m_buffer - 6;
-  if(writelen == 0)
-  {
-    return;
-  }
-
-  // Write length into buffer
-  sprintf_s(m_buffer, "%04x", writelen);
-  m_buffer[4] = '\r';
-  m_buffer[5] = '\n';
-
-  // Find offset of first nonzero digit in number
-  char* bufptr = m_buffer;
-  while(*bufptr == '0')
-  {
-    ++bufptr;
-  }
-
-  // Send the buffer
-  m_con.send(bufptr, m_bufptr - bufptr); 
-
-  // Reset the pointer
-  m_bufptr = m_buffer;
 }
 
 void 
@@ -297,13 +234,10 @@ http_response::finish()
     send_headers();
   }
 
-  // Handle chunked encoding
-  if(headers["Transfer-Encoding"] == "chunked")
+  // From headers sent
+  if(m_state == rs_headers && headers["Transfer-Encoding"] == "chunked")
   {
-    // Flush output buffer
-    flush();
-
-    // Write final chunk
+    // Send empty chunk
     m_con.send("0\r\n\r\n");
   }
 

@@ -73,6 +73,12 @@ http_site::set_autostart(bool b)
   m_autostart = b;
 }
 
+mime_resolver* 
+http_site::default_resolver() const
+{
+  return m_mime_default.m_resolver;
+}
+
 void
 http_site::set_default_resolver(mime_resolver* resolver)
 {

@@ -44,6 +44,11 @@ public:
   void init_logfile(String filename = "");
 
   //
+  // Retrieve the logfile
+  //
+  String const& logfile() const;
+
+  //
   // Add a line to the log
   //
   void log(String line);
@@ -68,7 +73,7 @@ public:
   //
   // Retrieve a http_site
   //
-  http_site* get_site(String const& name, int port) const;
+  http_site* get_site(String const& name) const;
 
   //
   // Site enumerators
@@ -128,17 +133,28 @@ private:
   // Log file
   //
   String m_logfile;
-  HANDLE      m_hlogfile;
+  HANDLE m_hlogfile;
 };
+
+//////////////////////////////////////////////////////////////////////////
 
 //
 // Instance of the server
 //
 #define httpd (http_daemon::instance())
 
+//////////////////////////////////////////////////////////////////////////
+
 //
 // Inline implementations
 //
+
+inline String const& 
+http_daemon::logfile() const
+{
+  return m_logfile;
+}
+
 inline http_daemon::site_iterator
 http_daemon::site_begin() const
 {

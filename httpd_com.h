@@ -9,6 +9,8 @@
 
 extern CComModule _Module;
 
+class http_site;
+
 //////////////////////////////////////////////////////////////////////////
 
 class Server : 
@@ -22,6 +24,8 @@ public:
   //
   // Implement IServer
   //
+  virtual HRESULT STDMETHODCALLTYPE get_Logfile(BSTR *filename);
+  virtual HRESULT STDMETHODCALLTYPE put_Logfile(BSTR filename);
   virtual HRESULT STDMETHODCALLTYPE GetSite(BSTR name, ISite **site);
   virtual HRESULT STDMETHODCALLTYPE AddSite(BSTR name, ISite **site);
   virtual HRESULT STDMETHODCALLTYPE RemoveSite(BSTR name);
@@ -63,6 +67,21 @@ class Site :
 public:
 
   //
+  // Initialize instance
+  //
+  void Init(http_site* site);
+
+  //
+  // Implement ISite
+  //
+  virtual HRESULT STDMETHODCALLTYPE get_Name(BSTR *name);
+  virtual HRESULT STDMETHODCALLTYPE get_Root(BSTR *root);
+  virtual HRESULT STDMETHODCALLTYPE put_Root(BSTR root);
+  virtual HRESULT STDMETHODCALLTYPE AddAlias(BSTR name, int port);
+  virtual HRESULT STDMETHODCALLTYPE AddMimeType(BSTR extension, BSTR mimetype);
+  virtual HRESULT STDMETHODCALLTYPE AddDefaultDocument(BSTR document);
+
+  //
   // COM interface map
   //
   BEGIN_COM_MAP(Site)
@@ -83,6 +102,14 @@ public:
     REGMAP_UUID ("LIBID",       LIBID_HTTPD)
     REGMAP_ENTRY("THREADING",   "Apartment")
   END_REGISTRY_MAP()
+
+private:
+
+  //
+  // Members
+  //
+  http_site* m_site;
+
 };
 
 //////////////////////////////////////////////////////////////////////////

@@ -132,6 +132,11 @@ public:
   mime_type const* get_mime_type(String const& type);
 
   //
+  // Retrieve the default mime resolver.
+  //
+  mime_resolver* default_resolver() const;
+
+  //
   // Set the default mime resolver. Returns the current one
   //
   void set_default_resolver(mime_resolver* resolver);

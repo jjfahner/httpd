@@ -225,10 +225,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\httpd.rc"
-				>
-			</File>
-			<File
 				RelativePath=".\httpd_com.cpp"
 				>
 			</File>
@@ -278,6 +274,10 @@
 			</File>
 			<File
 				RelativePath=".\socket.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\string.cpp"
 				>
 			</File>
 			<File
@@ -407,14 +407,30 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\httpd.tlb"
+		<Filter
+			Name="Resource Files"
 			>
-		</File>
-		<File
-			RelativePath=".\objects.rgs"
+			<File
+				RelativePath=".\httpd.rc"
+				>
+			</File>
+			<File
+				RelativePath=".\httpd.tlb"
+				>
+			</File>
+			<File
+				RelativePath=".\objects.rgs"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Tests"
 			>
-		</File>
+			<File
+				RelativePath=".\tests\server.js"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
