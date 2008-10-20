@@ -4,6 +4,10 @@
 #include <atlbase.h>
 #include <atlcom.h>
 #include "httpd_h.h"
+#include "registrymap.h"
+#include "resource.h"
+
+extern CComModule _Module;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -25,18 +29,26 @@ public:
   virtual HRESULT STDMETHODCALLTYPE Stop();
 
   //
-  // Update registry
-  //
-  static HRESULT WINAPI UpdateRegistry(BOOL) { return S_OK; }
-
-  //
-  // COM Interface map
+  // COM interface map
   //
   BEGIN_COM_MAP(Server)
     COM_INTERFACE_ENTRY(IDispatch)
     COM_INTERFACE_ENTRY(IServer)
     COM_INTERFACE_ENTRY(ISupportErrorInfo)
   END_COM_MAP()
+
+  //
+  // COM registry map
+  //
+  DECLARE_REGISTRY_RESOURCEID_EX(IDR_REGISTRY)
+  BEGIN_REGISTRY_MAP(Server)
+    REGMAP_ENTRY("PROGID",      "HTTPD.Server")
+    REGMAP_ENTRY("VERSION",     "1")
+    REGMAP_ENTRY("DESCRIPTION", "HTTPD Server class")
+    REGMAP_UUID ("CLSID",       CLSID_Server)
+    REGMAP_UUID ("LIBID",       LIBID_HTTPD)
+    REGMAP_ENTRY("THREADING",   "Apartment")
+  END_REGISTRY_MAP()
 
 };
 
@@ -51,12 +63,7 @@ class Site :
 public:
 
   //
-  // Update registry
-  //
-  static HRESULT WINAPI UpdateRegistry(BOOL) { return S_OK; }
-
-  //
-  // COM Interface map
+  // COM interface map
   //
   BEGIN_COM_MAP(Site)
     COM_INTERFACE_ENTRY(IDispatch)
@@ -64,6 +71,18 @@ public:
     COM_INTERFACE_ENTRY(ISupportErrorInfo)
   END_COM_MAP()
 
+  //
+  // COM registry map
+  //
+  DECLARE_REGISTRY_RESOURCEID_EX(IDR_REGISTRY)
+  BEGIN_REGISTRY_MAP(Site)
+    REGMAP_ENTRY("PROGID",      "HTTPD.Site")
+    REGMAP_ENTRY("VERSION",     "1")
+    REGMAP_ENTRY("DESCRIPTION", "HTTPD Site class")
+    REGMAP_UUID ("CLSID",       CLSID_Site)
+    REGMAP_UUID ("LIBID",       LIBID_HTTPD)
+    REGMAP_ENTRY("THREADING",   "Apartment")
+  END_REGISTRY_MAP()
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -76,20 +95,27 @@ class Request :
 {
 public:
 
-
   //
-  // Update registry
-  //
-  static HRESULT WINAPI UpdateRegistry(BOOL) { return S_OK; }
-
-  //
-  // COM Interface map
+  // COM interface map
   //
   BEGIN_COM_MAP(Request)
     COM_INTERFACE_ENTRY(IDispatch)
     COM_INTERFACE_ENTRY(IRequest)
     COM_INTERFACE_ENTRY(ISupportErrorInfo)
   END_COM_MAP()
+
+  //
+  // COM registry map
+  //
+  DECLARE_REGISTRY_RESOURCEID_EX(IDR_REGISTRY)
+  BEGIN_REGISTRY_MAP(Request)
+    REGMAP_ENTRY("PROGID",      "HTTPD.Request")
+    REGMAP_ENTRY("VERSION",     "1")
+    REGMAP_ENTRY("DESCRIPTION", "HTTPD Request class")
+    REGMAP_UUID ("CLSID",       CLSID_Request)
+    REGMAP_UUID ("LIBID",       LIBID_HTTPD)
+    REGMAP_ENTRY("THREADING",   "Apartment")
+  END_REGISTRY_MAP()
 
 };
 
@@ -113,11 +139,6 @@ public:
   virtual HRESULT STDMETHODCALLTYPE put_Buffer(VARIANT_BOOL value);
   virtual HRESULT STDMETHODCALLTYPE Flush();
   virtual HRESULT STDMETHODCALLTYPE Send(void *data, int length);
-
-  //
-  // Update registry
-  //
-  static HRESULT WINAPI UpdateRegistry(BOOL) { return S_OK; }
   
   //
   // COM Interface map
@@ -127,6 +148,19 @@ public:
     COM_INTERFACE_ENTRY(IResponse)
     COM_INTERFACE_ENTRY(ISupportErrorInfo)
   END_COM_MAP()
+
+  //
+  // Registry map
+  //
+  DECLARE_REGISTRY_RESOURCEID_EX(IDR_REGISTRY)
+  BEGIN_REGISTRY_MAP(Response)
+    REGMAP_ENTRY("PROGID",      "HTTPD.Response")
+    REGMAP_ENTRY("VERSION",     "1")
+    REGMAP_ENTRY("DESCRIPTION", "HTTPD Response class")
+    REGMAP_UUID ("CLSID",       CLSID_Response)
+    REGMAP_UUID ("LIBID",       LIBID_HTTPD)
+    REGMAP_ENTRY("THREADING",   "Apartment")
+  END_REGISTRY_MAP()
 
 };
 
