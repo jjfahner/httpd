@@ -132,7 +132,10 @@ Site::AddAlias(BSTR name, int port)
 }
 
 HRESULT STDMETHODCALLTYPE 
-Site::AddMimeType(BSTR extension, BSTR mimetype)
+Site::AddMimeType(BSTR extension, 
+                  BSTR mimetype /*, 
+                  IResolver* resolver, 
+                  IHandler* handler */ )
 {
   m_site->set_mime_type(extension, mimetype);
   return S_OK;

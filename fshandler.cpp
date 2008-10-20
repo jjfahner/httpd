@@ -10,6 +10,33 @@ m_path  (path)
 }
 
 bool 
+filesystem_handler::handle(http_context& context)
+{
+  if(context.request.method() == rm_get)
+  {
+    return handler(context);
+  }
+  context.response.send_error(501);
+  return true;
+}
+
+bool 
+filesystem_handler::handler(http_context& context)
+{
+  try
+  {
+    bool res = handler_impl(context);
+    delete this;
+    return res;
+  }
+  catch(...)
+  {
+    delete this;
+    return false;
+  }
+}
+
+bool 
 filesystem_handler::handler_impl(http_context& context)
 {
   // Set content-location

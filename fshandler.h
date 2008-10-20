@@ -13,40 +13,16 @@ public:
   filesystem_handler(String const& path, WIN32_FIND_DATA const& wfd);
 
   //
-  // GET handler
+  // Handler
   //
-  bool handle_get(http_context& context)
-  {
-    return handler_stub(context);
-  }
-
-  //
-  // POST handler
-  //
-  bool handle_post(http_context& context)
-  {
-    return handler_stub(context);
-  }
+  bool handle(http_context& context);
   
 private:
 
   //
   // Handler stub
   //
-  bool handler_stub(http_context& context)
-  {
-    try
-    {
-      bool res = handler_impl(context);
-      delete this;
-      return res;
-    }
-    catch(...)
-    {
-      delete this;
-      return false;
-    }
-  }
+  bool handler(http_context& context);
 
   //
   // Implements handle_get & handle_post
