@@ -13,6 +13,7 @@ library HTTPD
   //
   interface IServer;
   interface ISite;
+  interface ISites;
   interface IRequest;
   interface IResponse;
 
@@ -31,6 +32,9 @@ library HTTPD
 
     [helpstring("Set logfile"), propput]
     HRESULT Logfile([in] BSTR filename);
+
+    [helpstring("Retrieve sites collection"), propget]
+    HRESULT Sites([out, retval] ISites** sites);
 
     [helpstring("Retrieve a site by name")]
     HRESULT GetSite([in] BSTR name, [out, retval] ISite** site);
@@ -100,6 +104,29 @@ library HTTPD
   coclass Site
   {
     dispinterface ISite;
+  }
+
+  //////////////////////////////////////////////////////////////////////////
+  //
+  // ISites interface
+  //
+  [
+    uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2B5),
+    version(1.0)
+  ]
+  interface ISites : IDispatch
+  {
+    [helpstring("Retrieve the enumerator"), id(DISPID_NEWENUM), propget]
+    HRESULT _NewEnum([out, retval] IUnknown** ppUnk);
+
+    [helpstring("Retrieve a site item"), id(DISPID_VALUE), propget]
+    HRESULT Item([in] BSTR name, [out, retval] ISite** pSite);
+
+    [helpstring("Retrieve the number of sites"), propget]
+    HRESULT Count([out, retval] long* pVal);
+
+    [helpstring("Add a new site")]
+    HRESULT Add([in] BSTR name, [out, retval] ISite** pSite);
   }
 
   //////////////////////////////////////////////////////////////////////////

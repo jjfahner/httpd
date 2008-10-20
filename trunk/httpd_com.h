@@ -13,7 +13,7 @@ class http_site;
 
 //////////////////////////////////////////////////////////////////////////
 
-class Server : 
+class ATL_NO_VTABLE Server : 
   public CComObjectRootEx<CComMultiThreadModel>,
   public IDispatchImpl<IServer, &IID_IServer, &CAtlModule::m_libid, 0xFFFF, 0xFFFF>,
   public CComCoClass<Server, &IID_IServer>, 
@@ -26,6 +26,7 @@ public:
   //
   virtual HRESULT STDMETHODCALLTYPE get_Logfile(BSTR *filename);
   virtual HRESULT STDMETHODCALLTYPE put_Logfile(BSTR filename);
+  virtual HRESULT STDMETHODCALLTYPE get_Sites(ISites** sites);
   virtual HRESULT STDMETHODCALLTYPE GetSite(BSTR name, ISite **site);
   virtual HRESULT STDMETHODCALLTYPE AddSite(BSTR name, ISite **site);
   virtual HRESULT STDMETHODCALLTYPE RemoveSite(BSTR name);
@@ -58,7 +59,7 @@ public:
 
 //////////////////////////////////////////////////////////////////////////
 
-class Site : 
+class ATL_NO_VTABLE Site : 
   public CComObjectRootEx<CComMultiThreadModel>,
   public IDispatchImpl<ISite, &IID_ISite, &CAtlModule::m_libid, 0xFFFF, 0xFFFF>,
   public CComCoClass<Site, &IID_ISite>, 
@@ -114,7 +115,36 @@ private:
 
 //////////////////////////////////////////////////////////////////////////
 
-class Request : 
+class ATL_NO_VTABLE Sites : 
+  public CComObjectRootEx<CComMultiThreadModel>,
+  public IDispatchImpl<ISites, &IID_ISites, &CAtlModule::m_libid, 0xFFFF, 0xFFFF>,
+  public CComCoClass<Sites, &IID_ISites>, 
+  public ISupportErrorInfoImpl<&IID_ISites>
+{
+public:
+
+  //
+  // Implement ISites
+  //
+  virtual HRESULT STDMETHODCALLTYPE get__NewEnum(IUnknown **ppUnk);
+  virtual HRESULT STDMETHODCALLTYPE get_Item(BSTR name, ISite **pSite);
+  virtual HRESULT STDMETHODCALLTYPE get_Count(long *pVal);
+  virtual HRESULT STDMETHODCALLTYPE Add(BSTR name, ISite **pSite);
+
+  //
+  // COM interface map
+  //
+  BEGIN_COM_MAP(Sites)
+    COM_INTERFACE_ENTRY(IDispatch)
+    COM_INTERFACE_ENTRY(ISites)
+    COM_INTERFACE_ENTRY(ISupportErrorInfo)
+  END_COM_MAP()
+
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+class ATL_NO_VTABLE Request : 
   public CComObjectRootEx<CComMultiThreadModel>,
   public IDispatchImpl<IRequest, &IID_IRequest, &CAtlModule::m_libid, 0xFFFF, 0xFFFF>,
   public CComCoClass<Request, &IID_IRequest>, 
@@ -148,7 +178,7 @@ public:
 
 //////////////////////////////////////////////////////////////////////////
 
-class Response : 
+class ATL_NO_VTABLE Response : 
   public CComObjectRootEx<CComMultiThreadModel>,
   public IDispatchImpl<IResponse, &IID_IResponse, &CAtlModule::m_libid, 0xFFFF, 0xFFFF>,
   public CComCoClass<Response, &IID_IResponse>, 

@@ -5,30 +5,52 @@ function print(arg)
 
 function test()
 {
-    var server = WScript.CreateObject("HTTPD.Server");
-    
-    var site = server.AddSite("main");
-    
-    site.AddAlias('*', 80);
-    site.Root = 'd:\\pronto\\startscherm';
-    site.AddDefaultDocument('index.htm');
-    
-    site.AddMimeType('html', 'text/html');
-    site.AddMimeType('htm',  'text/html');
-    site.AddMimeType('css',  'text/css');
-    site.AddMimeType('gif',  'image/gif');
-    site.AddMimeType('jpg',  'image/jpeg');
-    site.AddMimeType('js',   'text/javascript');
-    
-    server.Start();
-    
-    WScript.Sleep(20000);
+  // Create http server
+  var server = WScript.CreateObject("HTTPD.Server");
+
+  // Add a site
+  var site = server.AddSite("main");
+  if(site == null)
+  {
+    print("Error: failed to add site to server");
+    return;
+  }
+
+  // Check collection size    
+  if(server.Sites.Count != 1)
+  {
+    print("Error: expected 1 site in collection");
+    return;
+  }
+
+  // Retrieve it through the collection
+  site = server.Sites("main");
+  if(site == null)
+  {
+    print("Error: failed to retrieve site from collection");
+    return;
+  }
+
+  site.AddAlias('*', 80);
+  site.Root = 'd:\\pronto\\startscherm';
+  site.AddDefaultDocument('index.htm');
+
+  site.AddMimeType('html', 'text/html');
+  site.AddMimeType('htm',  'text/html');
+  site.AddMimeType('css',  'text/css');
+  site.AddMimeType('gif',  'image/gif');
+  site.AddMimeType('jpg',  'image/jpeg');
+  site.AddMimeType('js',   'text/javascript');
+
+  server.Start();
+
+  WScript.Sleep(20000);
 }
 
 try
 {
-    print('starting...');
-    test();
+  print('starting...');
+  test();
 }
 catch(ex)
 {

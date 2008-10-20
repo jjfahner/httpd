@@ -53,6 +53,26 @@ Server::put_Logfile(BSTR filename)
 }
 
 HRESULT STDMETHODCALLTYPE 
+Server::get_Sites(ISites** sites)
+{
+  // Create instance of Site class
+  CComObject<Sites>* pObject;
+  if(FAILED(pObject->CreateInstance(&pObject)))
+  {
+    return E_UNEXPECTED;
+  }
+
+  // Retrieve site interface
+  if(FAILED(pObject->QueryInterface(IID_ISites, (void**)sites)))
+  {
+    return E_NOINTERFACE;
+  }
+
+  // Succeeded
+  return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE 
 Server::GetSite(BSTR name, ISite **site)
 {
   *site = 0;
@@ -160,6 +180,46 @@ Site::AddMimeType(BSTR extension, BSTR mimetype)
 HRESULT STDMETHODCALLTYPE 
 Site::AddDefaultDocument(BSTR document)
 {
+  m_site->default_docs.push_back(document);
+  return S_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE 
+Sites::get__NewEnum(IUnknown **ppUnk)
+{
+  *ppUnk = 0;
+  return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE 
+Sites::get_Item(BSTR name, ISite **site)
+{
+  *site = 0;
+
+  // Find site
+  http_site* p = httpd.get_site(name);
+  if(p == 0)
+  {
+    return E_FAIL;
+  }
+
+  // Create the site instance
+  return CreateSite(p, site);
+}
+
+HRESULT STDMETHODCALLTYPE 
+Sites::get_Count(long *pVal)
+{
+  *pVal = httpd.sites().size();
+  return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE 
+Sites::Add(BSTR name, ISite **pSite)
+{
+  *pSite = 0;
   return S_OK;
 }
 
