@@ -14,21 +14,19 @@ END_OBJECT_MAP()
 
 //////////////////////////////////////////////////////////////////////////
 
-extern "C" BOOL  __declspec(dllexport) WINAPI
-DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID)
+BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID)
 {
   switch(dwReason)
   {
   case DLL_PROCESS_ATTACH:
     g_module.Init(ObjectMap, hInstance, &LIBID_HTTPD);
-    DisableThreadLibraryCalls(hInstance); // TODO read up on this
+    DisableThreadLibraryCalls(hInstance); // TODO
     break;
   case DLL_PROCESS_DETACH:
     g_module.Term();
     break;
   }
-
-  return 0;
+  return TRUE;
 }
 
 //////////////////////////////////////////////////////////////////////////
