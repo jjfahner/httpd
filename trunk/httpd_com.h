@@ -76,7 +76,8 @@ public:
   virtual HRESULT STDMETHODCALLTYPE get_Root(BSTR *root);
   virtual HRESULT STDMETHODCALLTYPE put_Root(BSTR root);
   virtual HRESULT STDMETHODCALLTYPE AddAlias(BSTR name, int port);
-  virtual HRESULT STDMETHODCALLTYPE AddMimeType(BSTR extension, BSTR mimetype);
+  virtual HRESULT STDMETHODCALLTYPE AddMimeType(BSTR extension, BSTR mimetype
+    /*, IResolver* resolver, IHandler* handler*/);
   virtual HRESULT STDMETHODCALLTYPE AddDefaultDocument(BSTR document);
 
   //

@@ -16,6 +16,8 @@ library HTTPD
   interface ISites;
   interface IRequest;
   interface IResponse;
+  interface IResolver;
+  interface IHandler;
 
   //////////////////////////////////////////////////////////////////////////
   //
@@ -79,7 +81,10 @@ library HTTPD
     HRESULT AddAlias([in]BSTR name, [in] int port);
 
     [helpstring("Add a mime type to the site")]
-    HRESULT AddMimeType([in] BSTR extension, [in] BSTR mimetype);
+    HRESULT AddMimeType([in] BSTR extension, 
+                        [in] BSTR mimetype /*, 
+                        [in, defaultvalue(NULL)] IResolver* resolver, 
+                        [in, defaultvalue(NULL)] IHandler* handler */ );
 
     [helpstring("Add a default document to the site")]
     HRESULT AddDefaultDocument([in] BSTR document);
@@ -186,6 +191,34 @@ library HTTPD
   coclass Response
   {
     dispinterface IResponse;
+  }
+
+  //////////////////////////////////////////////////////////////////////////
+  //
+  // IResolver interface
+  //
+  [
+    uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2BE),
+    version(1.0)
+  ]
+  interface IResolver : IUnknown
+  {
+    [helpstring("Resolve a request")]
+    HRESULT Resolve([in] IRequest* request, [in] BSTR uri, [out, retval] IHandler** handler);
+  }
+  
+  //////////////////////////////////////////////////////////////////////////
+  //
+  // IHandler interface
+  //
+  [
+    uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2BF),
+    version(1.0)
+  ]
+  interface IHandler : IUnknown
+  {
+    [helpstring("Handle a request")]
+    HRESULT Handle([in] IRequest* request, [in] IResponse* response);
   }
 
 }

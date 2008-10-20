@@ -326,19 +326,7 @@ http_site::handle_request(http_context& context)
   // Delegate the http_request to the handler
   try
   {
-    switch(context.request.method())
-    {
-    case rm_get:      result = handler->handle_get    (context); break;
-    case rm_post:     result = handler->handle_post   (context); break;
-    case rm_connect:  result = handler->handle_connect(context); break;
-    case rm_custom:   result = handler->handle_custom (context); break;
-    case rm_delete:   result = handler->handle_delete (context); break;
-    case rm_head:     result = handler->handle_head   (context); break;
-    case rm_none:     result = handler->handle_none   (context); break;
-    case rm_options:  result = handler->handle_options(context); break;
-    case rm_put:      result = handler->handle_put    (context); break;
-    case rm_trace:    result = handler->handle_trace  (context); break;
-    }
+    handler->handle(context);
   }
   catch(std::exception const& e)
   {
