@@ -1,5 +1,6 @@
 #include "precomp.h"
 #include "httpd_com.h"
+#include "httpd_i.c"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -31,6 +32,50 @@ Server::Start()
 
 HRESULT STDMETHODCALLTYPE 
 Server::Stop()
+{
+  return S_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE 
+Response::GetHeader(BSTR name, BSTR *value)
+{
+  return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE 
+Response::SetHeader(BSTR name, BSTR value)
+{
+  return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE 
+Response::SendHeaders()
+{
+  return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE 
+Response::get_Buffer(VARIANT_BOOL *result)
+{
+  return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE 
+Response::put_Buffer(VARIANT_BOOL value)
+{
+  return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE 
+Response::Flush()
+{
+  return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE 
+Response::Send(void *data, int length)
 {
   return S_OK;
 }
