@@ -1,0 +1,151 @@
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+  uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2B0),
+  version(1.0)
+]
+library HTTPD
+{
+  //////////////////////////////////////////////////////////////////////////
+  //
+  // Forward declares
+  //
+  interface IServer;
+  interface ISite;
+  interface IRequest;
+  interface IResponse;
+
+  //////////////////////////////////////////////////////////////////////////
+  //
+  // IServer interface
+  //
+  [
+    uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2B1),
+    version(1.0),
+  ]
+  interface IServer : IDispatch
+  {
+    [helpstring("Retrieve a site by name")]
+    HRESULT GetSite([in] BSTR name, [out, retval] ISite** site);
+
+    [helpstring("Add a new site to the server")]
+    HRESULT AddSite([in] BSTR name, [out, retval] ISite** site);
+
+    [helpstring("Remove a site from the server")]
+    HRESULT RemoveSite([in] BSTR name);
+
+    [helpstring("Start the server")]
+    HRESULT Start();
+
+    [helpstring("Stop the server")]
+    HRESULT Stop();
+  }
+
+  //
+  // Server class
+  //
+  [
+    uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2B2),
+    version(1.0),
+    appobject
+  ]
+  coclass Server
+  {
+    dispinterface IServer;
+  }
+
+  //////////////////////////////////////////////////////////////////////////
+  //
+  // ISite interface
+  //
+  [
+    uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2B3),
+    version(1.0)
+  ]
+  interface ISite : IDispatch
+  {
+
+  }
+
+  //
+  // Site class
+  //
+  [
+    uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2B4),
+    version(1.0)
+  ]
+  coclass Site
+  {
+    dispinterface ISite;
+  }
+
+  //////////////////////////////////////////////////////////////////////////
+  //
+  // IRequest interface
+  //
+  [
+    uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2BA),
+    version(1.0)
+  ]
+  interface IRequest : IDispatch
+  {
+  }
+
+  //
+  // Request class
+  //
+  [
+    uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2BB),
+    version(1.0)
+  ]
+  coclass Request
+  {
+    dispinterface IRequest;
+  }
+
+  //////////////////////////////////////////////////////////////////////////
+  //
+  // IResponse interface
+  //
+  [
+    uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2BC),
+    version(1.0)
+  ]
+  interface IResponse : IDispatch
+  {
+    [helpstring("Retrieve a response header")]
+    HRESULT GetHeader([in] BSTR name, [out, retval] BSTR* value);
+
+    [helpstring("Set a response header")]
+    HRESULT SetHeader([in] BSTR name, [in] BSTR value);
+
+    [helpstring("Send response headers")]
+    HRESULT SendHeaders();
+
+    [helpstring("Get buffering state"), propget]
+    HRESULT Buffer([out, retval] VARIANT_BOOL* result);
+    
+    [helpstring("Set buffering state"), propput]
+    HRESULT Buffer([in] VARIANT_BOOL value);
+
+    [helpstring("Flush output buffer")]
+    HRESULT Flush();
+
+    [helpstring("Send response data")]
+    HRESULT Send([in] void* data, [in] int length);
+  }
+
+  //
+  // Response class
+  //
+  [
+    uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2BD),
+    version(1.0)
+  ]
+  coclass Response
+  {
+    dispinterface IResponse;
+  }
+
+}

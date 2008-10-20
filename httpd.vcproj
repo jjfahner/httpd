@@ -21,6 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
+			UseOfATL="1"
 			CharacterSet="2"
 			>
 			<Tool
@@ -93,6 +94,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
+			UseOfATL="1"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
@@ -194,6 +196,14 @@
 			</File>
 			<File
 				RelativePath=".\httpd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\httpd.idl"
+				>
+			</File>
+			<File
+				RelativePath=".\httpd_com.cpp"
 				>
 			</File>
 			<File
@@ -300,6 +310,10 @@
 			</File>
 			<File
 				RelativePath=".\httpd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\httpd_com.h"
 				>
 			</File>
 			<File
