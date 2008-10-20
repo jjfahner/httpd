@@ -26,6 +26,12 @@ library HTTPD
   ]
   interface IServer : IDispatch
   {
+    [helpstring("Get logfile"), propget]
+    HRESULT Logfile([out, retval] BSTR* filename);
+
+    [helpstring("Set logfile"), propput]
+    HRESULT Logfile([in] BSTR filename);
+
     [helpstring("Retrieve a site by name")]
     HRESULT GetSite([in] BSTR name, [out, retval] ISite** site);
 
@@ -65,6 +71,23 @@ library HTTPD
   ]
   interface ISite : IDispatch
   {
+    [helpstring("Site name"), propget]
+    HRESULT Name([out, retval] BSTR* name);
+
+    [helpstring("Site root"), propget]
+    HRESULT Root([out, retval] BSTR* root);
+
+    [helpstring("Site root"), propput]
+    HRESULT Root([in] BSTR root);
+
+    [helpstring("Add alias for site")]
+    HRESULT AddAlias([in]BSTR name, [in] int port);
+
+    [helpstring("Add a mime type to the site")]
+    HRESULT AddMimeType([in] BSTR extension, [in] BSTR mimetype);
+
+    [helpstring("Add a default document to the site")]
+    HRESULT AddDefaultDocument([in] BSTR document);
   }
 
   //

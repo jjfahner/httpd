@@ -30,10 +30,7 @@ public:
   //
   // Construction from wide char
   //
-  String(wchar_t const* str)
-  {
-    // TODO, probably best in source file
-  }
+  String(wchar_t const* str);
 
   //
   // Construction from iterator range
@@ -48,6 +45,11 @@ public:
   String(Base const& base) : Base(base)
   {
   }
+
+  //
+  // Allocate a system string
+  //
+  wchar_t* AllocSysString() const;
 
 };
 

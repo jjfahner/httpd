@@ -134,7 +134,7 @@ http_daemon::add_site(http_site* s)
 }
 
 http_site* 
-http_daemon::get_site(String const& name, int /*port*/) const
+http_daemon::get_site(String const& name) const
 {
   site_map::const_iterator it;
   if((it = m_sites.find(name)) == m_sites.end())

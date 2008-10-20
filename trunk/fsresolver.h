@@ -17,6 +17,11 @@ public:
   ~filesystem_resolver();
 
   //
+  // Retrieve the root
+  //
+  String const& root() const;
+
+  //
   // Resolve a http_request
   //
   mime_handler* resolve(http_context& context, String const& uri);
@@ -32,5 +37,11 @@ private:
   String m_root;
 
 };
+
+inline String const& 
+filesystem_resolver::root() const
+{
+  return m_root;
+}
 
 #endif  // #ifndef FSRESOLVER_H
