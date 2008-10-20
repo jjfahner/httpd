@@ -3,7 +3,7 @@
 #include "connection.h"
 #include "httpd.h"
 
-const std::string server_string = "httpd/1.0(Win32)";
+const String server_string = "httpd/1.0(Win32)";
 
 http_response::http_response(connection& con) :
 m_con   (con),
@@ -59,14 +59,14 @@ http_response::set_version(http_versions ver)
   m_ver = ver;
 }
 
-std::string const& 
+String const& 
 http_response::status() const
 {
   return m_status;
 }
 
 void 
-http_response::set_status(std::string const& s)
+http_response::set_status(String const& s)
 {
   // May not be empty
   if(s.empty())
@@ -99,7 +99,7 @@ http_response::send_headers()
   }
 
   // Determine content-type
-  std::string ct = headers["Content-Type"];
+  String ct = headers["Content-Type"];
   if(ct.empty())
   {
     ct = "application/octet-stream";
@@ -107,7 +107,7 @@ http_response::send_headers()
 
   // For text, append charset
   if(ct.substr(0, 5) == "text/" && 
-     ct.find(';') == std::string::npos)
+     ct.find(';') == String::npos)
   {
     ct += "; charset=utf-8";
   }
@@ -142,7 +142,7 @@ http_response::send_headers()
 void 
 http_response::impl_send_headers()
 {
-  std::string hdrs;
+  String hdrs;
 
   // Status line
   if(version() == httpver_1_0)
@@ -174,7 +174,7 @@ http_response::impl_send_headers()
 }
 
 void 
-http_response::send(std::string const& str)
+http_response::send(String const& str)
 {
   send(str.c_str(), str.length());
 }
@@ -362,7 +362,7 @@ http_response::send_error(int error)
   impl_send_headers();
 
   // Body
-  std::string msg;
+  String msg;
   create_error_doc(msg);
   send(msg.c_str());
 
@@ -393,7 +393,7 @@ http_response::send_unauthorized()
   impl_send_headers();
 
   // Body
-  std::string msg;
+  String msg;
   create_error_doc(msg);
   send(msg.c_str());
 
@@ -432,7 +432,7 @@ http_response::send_not_modified()
 }
 
 void 
-http_response::create_error_doc(std::string& msg)
+http_response::create_error_doc(String& msg)
 {
   std::stringstream reply;
 

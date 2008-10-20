@@ -36,15 +36,15 @@ public:
   class exception : public std::exception 
   {
   public:
-    exception(std::string const& what) : std::exception(what.c_str()) {}
+    exception(String const& what) : std::exception(what.c_str()) {}
   };
 
   // Exception from network layer
   class socket_exception : public exception
   {
-    static std::string format_error(std::string const& what, int error);
+    static String format_error(String const& what, int error);
   public:
-    socket_exception(std::string const& what, int error);
+    socket_exception(String const& what, int error);
   };
 
   //
@@ -56,7 +56,7 @@ public:
   //
   // Construct a connected socket
   //
-  socket(std::string const& hostname, int port = 80, sync_modes = sm_default);
+  socket(String const& hostname, int port = 80, sync_modes = sm_default);
 
   //
   // Construct a listening socket
@@ -83,14 +83,14 @@ public:
   //
   // Remote ip/port/hostname
   //
-  std::string peer_addr() const;
-  std::string peer_name() const;
+  String peer_addr() const;
+  String peer_name() const;
   int         peer_port() const;
 
   //
   // Connect to a remote socket
   //
-  void connect(std::string const& hostname, int port = 80, sync_modes = sm_default);
+  void connect(String const& hostname, int port = 80, sync_modes = sm_default);
   
   //
   // Listen for incoming connections
@@ -110,7 +110,7 @@ public:
   //
   // Send data
   //
-  void send(std::string const&, int timeout = 0);
+  void send(String const&, int timeout = 0);
   void send(void* pbuf, int size, int timeout = 0);
   void send(char const* pbuf, int size = 0, int timeout = 0);
 
@@ -168,8 +168,8 @@ private:
   bool            m_async;
   int             m_port;
 
-  mutable std::string m_peer_addr;
-  mutable std::string m_peer_name;
+  mutable String m_peer_addr;
+  mutable String m_peer_name;
   mutable int         m_peer_port;
 
   class wsainit;

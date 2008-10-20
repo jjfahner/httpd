@@ -13,23 +13,23 @@ public:
   //
   // Construction
   //
-   filesystem_resolver(std::string const& root);
+   filesystem_resolver(String const& root);
   ~filesystem_resolver();
 
   //
   // Resolve a http_request
   //
-  mime_handler* resolve(http_context& context, std::string const& uri);
+  mime_handler* resolve(http_context& context, String const& uri);
 
 private:
 
   //
   // Resolve any \..\ refs
   //
-  bool resolve_updirs(std::string path);
+  bool resolve_updirs(String path);
 
   // Filesystem root
-  std::string m_root;
+  String m_root;
 
 };
 

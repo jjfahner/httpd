@@ -8,17 +8,17 @@
 //
 // stringmap declaration
 
-class stringmap : protected std::map<std::string, std::string, httpd_nocase_cmp >
+class stringmap : protected std::map<String, String, httpd_nocase_cmp >
 {
 public:
 
   //
   // Local types
   //
-  typedef std::map<std::string, std::string, httpd_nocase_cmp > base_type;
+  typedef std::map<String, String, httpd_nocase_cmp > base_type;
   typedef stringmap this_type;
-  typedef std::string key_type;
-  typedef std::string value_type;
+  typedef String key_type;
+  typedef String value_type;
 
   //
   // Members used directly from base.
@@ -380,8 +380,8 @@ stringmap::const_index_proxy::operator != (bool rhs) const
   return !(*this == rhs);
 }
 
-inline std::string 
-operator + (std::string const& lhs, stringmap::const_index_proxy const& rhs)
+inline String 
+operator + (String const& lhs, stringmap::const_index_proxy const& rhs)
 {
   return lhs + rhs.as_str();
 }

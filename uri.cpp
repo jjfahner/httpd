@@ -2,13 +2,13 @@
 #include "uri.h"
 
 bool
-uri::parse(std::string const& src)
+uri::parse(String const& src)
 {
   clear();
 
   // Find protocol prefix
-  std::string::size_type pos1 = 0, pos2;
-  if((pos1 = src.find(':')) != std::string::npos)
+  String::size_type pos1 = 0, pos2;
+  if((pos1 = src.find(':')) != String::npos)
   {
     if(src[pos1 + 1] == '/' && src[pos1 + 2] == '/')
     {
@@ -22,7 +22,7 @@ uri::parse(std::string const& src)
   }
 
   // Find port separator
-  if((pos2 = src.find(':', pos1)) != std::string::npos)
+  if((pos2 = src.find(':', pos1)) != String::npos)
   {
     // Ensure that the port sep lies before any path seps
     if(src.find('/', pos1) > pos2)
@@ -33,7 +33,7 @@ uri::parse(std::string const& src)
       // Find port end
       pos1 = pos2 + 1;
       pos2 = src.find_first_not_of("0123456789", pos1);
-      //std::string::size_type len = pos2 == std::string::npos ? pos2 : pos2 - pos1;
+      //String::size_type len = pos2 == String::npos ? pos2 : pos2 - pos1;
 
       // Extract port
       m_port = atoi(src.substr(pos1, pos2 - pos1).c_str());
@@ -52,10 +52,10 @@ uri::parse(std::string const& src)
   return true;
 }
 
-std::string 
+String 
 uri::str() const
 {
-  std::string res;
+  String res;
   if(!m_prot.empty())
   {
     res = m_prot + "://";

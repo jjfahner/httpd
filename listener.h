@@ -15,7 +15,7 @@ public:
   //
   // Mapping between name and http_site
   //
-  typedef std::map<std::string, http_site*, httpd_nocase_cmp > site_map;
+  typedef std::map<String, http_site*, httpd_nocase_cmp > site_map;
 
   //
   // Construction
@@ -37,13 +37,13 @@ public:
   //
   // Retrieve a http_site by name
   //
-  http_site* get_site(std::string const& name);
+  http_site* get_site(String const& name);
 
   //
   // Add/remove sites
   //
-  void attach(http_site* s, std::string const& name);
-  long detach(http_site* s, std::string const& name);
+  void attach(http_site* s, String const& name);
+  long detach(http_site* s, String const& name);
 
 private:
 

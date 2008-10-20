@@ -36,7 +36,7 @@ public:
   class exception : public std::exception 
   {
   public:
-    exception(std::string const& what) : std::exception(what.c_str()) {}
+    exception(String const& what) : std::exception(what.c_str()) {}
   };
 
 

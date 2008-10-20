@@ -52,7 +52,7 @@ public:
   //
   // Set a value from "name: value"
   //
-  void set(std::string const& line);
+  void set(String const& line);
 
   //
   // Append a value to key
@@ -62,12 +62,12 @@ public:
   //
   // Append a value from "name: value"
   //
-  void append(std::string const& line);
+  void append(String const& line);
 
   //
   // Build a string containing all pairs
   //
-  std::string str(std::string const& separator = "\r\n") const;
+  String str(String const& separator = "\r\n") const;
 
   //
   // Indexing operator
@@ -123,22 +123,22 @@ public:
   };
 };
 
-inline bool operator == (header_map::const_index_proxy const& lhs, std::string const& rhs)
+inline bool operator == (header_map::const_index_proxy const& lhs, String const& rhs)
 { return _stricmp(lhs.as_str().c_str(), rhs.c_str()) == 0; }
 inline bool operator == (header_map::const_index_proxy const& lhs, char const* rhs)
 { return _stricmp(lhs.as_str().c_str(), rhs) == 0; }
 
-inline bool operator != (header_map::const_index_proxy const& lhs, std::string const& rhs)
+inline bool operator != (header_map::const_index_proxy const& lhs, String const& rhs)
 { return _stricmp(lhs.as_str().c_str(), rhs.c_str()) != 0; }
 inline bool operator != (header_map::const_index_proxy const& lhs, char const* rhs)
 { return _stricmp(lhs.as_str().c_str(), rhs) != 0; }
 
-inline bool operator == (std::string const& lhs, header_map::const_index_proxy const& rhs)
+inline bool operator == (String const& lhs, header_map::const_index_proxy const& rhs)
 { return _stricmp(lhs.c_str(), rhs.as_str().c_str()) == 0; }
 inline bool operator == (char const* lhs, header_map::const_index_proxy const& rhs)
 { return _stricmp(lhs, rhs.as_str().c_str()) == 0; }
 
-inline bool operator != (std::string const& lhs, header_map::const_index_proxy const& rhs)
+inline bool operator != (String const& lhs, header_map::const_index_proxy const& rhs)
 { return _stricmp(lhs.c_str(), rhs.as_str().c_str()) != 0; }
 inline bool operator != (char const* lhs, header_map::const_index_proxy const& rhs)
 { return _stricmp(lhs, rhs.as_str().c_str()) != 0; }
@@ -182,22 +182,22 @@ public:
   }
 };
 
-inline bool operator == (header_map::index_proxy const& lhs, std::string const& rhs)
+inline bool operator == (header_map::index_proxy const& lhs, String const& rhs)
 { return _stricmp(lhs.as_str().c_str(), rhs.c_str()) == 0; }
 inline bool operator == (header_map::index_proxy const& lhs, char const* rhs)
 { return _stricmp(lhs.as_str().c_str(), rhs) == 0; }
 
-inline bool operator != (header_map::index_proxy const& lhs, std::string const& rhs)
+inline bool operator != (header_map::index_proxy const& lhs, String const& rhs)
 { return _stricmp(lhs.as_str().c_str(), rhs.c_str()) != 0; }
 inline bool operator != (header_map::index_proxy const& lhs, char const* rhs)
 { return _stricmp(lhs.as_str().c_str(), rhs) != 0; }
 
-inline bool operator == (std::string const& lhs, header_map::index_proxy const& rhs)
+inline bool operator == (String const& lhs, header_map::index_proxy const& rhs)
 { return _stricmp(lhs.c_str(), rhs.as_str().c_str()) == 0; }
 inline bool operator == (char const* lhs, header_map::index_proxy const& rhs)
 { return _stricmp(lhs, rhs.as_str().c_str()) == 0; }
 
-inline bool operator != (std::string const& lhs, header_map::index_proxy const& rhs)
+inline bool operator != (String const& lhs, header_map::index_proxy const& rhs)
 { return _stricmp(lhs.c_str(), rhs.as_str().c_str()) != 0; }
 inline bool operator != (char const* lhs, header_map::index_proxy const& rhs)
 { return _stricmp(lhs, rhs.as_str().c_str()) != 0; }
@@ -268,10 +268,10 @@ header_map::append(key_type const& key, value_type const& value)
 }
 
 inline void 
-header_map::append(std::string const& line)
+header_map::append(String const& line)
 {
-  std::string::size_type pos = line.find(':');
-  if(pos == 0 || pos == std::string::npos)
+  String::size_type pos = line.find(':');
+  if(pos == 0 || pos == String::npos)
   {
     throw std::exception("Invalid header line");
   }
@@ -297,10 +297,10 @@ header_map::set(key_type const& key, value_type const& value)
 }
 
 inline void 
-header_map::set(std::string const& line)
+header_map::set(String const& line)
 {
-  std::string::size_type pos = line.find(':');
-  if(pos == 0 || pos == std::string::npos)
+  String::size_type pos = line.find(':');
+  if(pos == 0 || pos == String::npos)
   {
     throw std::exception("Invalid header line");
   }
@@ -309,7 +309,7 @@ header_map::set(std::string const& line)
 }
 
 inline header_map::value_type 
-header_map::str(std::string const& separator) const
+header_map::str(String const& separator) const
 { 
   value_type headers;
   header_map::const_inorder_iterator it, ie;

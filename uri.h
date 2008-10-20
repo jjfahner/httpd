@@ -15,7 +15,7 @@ public:
   // Construction
   //
   uri();
-  uri(std::string const& src);
+  uri(String const& src);
 
   //
   // Clear the uri
@@ -35,48 +35,48 @@ public:
   // 
   // Individual components
   //
-  std::string const& protocol() const;
-  std::string const& host() const;
+  String const& protocol() const;
+  String const& host() const;
   int                port() const;
-  std::string const& path() const;
+  String const& path() const;
 
   //
   // Try to set from string
   //
-  bool parse(std::string const&);
+  bool parse(String const&);
 
   //
   // Set from string or throw exception
   //
-  void set(std::string const&);
+  void set(String const&);
 
   //
   // Retrieve as string
   //
-  std::string str() const;
+  String str() const;
 
   // Behave as string
-  operator std::string() const;
+  operator String() const;
 
 private:
 
-  std::string   m_prot;
-  std::string   m_host;
+  String   m_prot;
+  String   m_host;
   int           m_port;
-  std::string   m_path;
+  String   m_path;
 
 };
 
 class uri::invalid_uri : public std::exception
 {
-  static std::string format_error(std::string const& src)
+  static String format_error(String const& src)
   {
-    std::string text("Invalid uri: ");
+    String text("Invalid uri: ");
     text += src;
     return text;
   }
 public:
-  invalid_uri(std::string const& src) : 
+  invalid_uri(String const& src) : 
     std::exception(format_error(src).c_str()) 
   {
   }
@@ -89,7 +89,7 @@ uri::uri()
 }
 
 inline
-uri::uri(std::string const& str)
+uri::uri(String const& str)
 {
   set(str);
 }
@@ -118,13 +118,13 @@ uri::valid() const
   return !empty();
 }
 
-inline std::string const& 
+inline String const& 
 uri::protocol() const
 {
   return m_prot;
 }
 
-inline std::string const& 
+inline String const& 
 uri::host() const
 {
   return m_host;
@@ -136,14 +136,14 @@ uri::port() const
   return m_port;
 }
 
-inline std::string const& 
+inline String const& 
 uri::path() const
 {
   return m_path;
 }
 
 inline void
-uri::set(std::string const& src)
+uri::set(String const& src)
 {
   if(!parse(src))
   {
@@ -152,7 +152,7 @@ uri::set(std::string const& src)
 }
 
 inline 
-uri::operator std::string() const
+uri::operator String() const
 {
   return str();
 }

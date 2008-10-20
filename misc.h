@@ -1,10 +1,10 @@
 #ifndef MISC_H
 #define MISC_H
 
-// Case-insensitive comparator for std::string
+// Case-insensitive comparator for String
 struct httpd_nocase_cmp 
 {
-  bool operator () (std::string const& lhs, std::string const& rhs) const
+  bool operator () (String const& lhs, String const& rhs) const
   { 
     return _stricmp(lhs.c_str(), rhs.c_str()) < 0; 
   }

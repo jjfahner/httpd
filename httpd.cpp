@@ -52,7 +52,7 @@ http_daemon::~http_daemon()
 }
 
 void 
-http_daemon::init_logfile(std::string filename)
+http_daemon::init_logfile(String filename)
 {
   // Close current file
   term_logfile();
@@ -103,7 +103,7 @@ http_daemon::term_logfile()
 }
 
 void 
-http_daemon::log(std::string line)
+http_daemon::log(String line)
 {
   CLASS_STATE(0);
   DWORD w;
@@ -134,7 +134,7 @@ http_daemon::add_site(http_site* s)
 }
 
 http_site* 
-http_daemon::get_site(std::string const& name, int /*port*/) const
+http_daemon::get_site(String const& name, int /*port*/) const
 {
   site_map::const_iterator it;
   if((it = m_sites.find(name)) == m_sites.end())
@@ -208,7 +208,7 @@ http_daemon::stop()
 }
 
 void 
-http_daemon::start_site(std::string const& name)
+http_daemon::start_site(String const& name)
 {
   CLASS_STATE(ds_running);
 
@@ -228,7 +228,7 @@ http_daemon::start_site(std::string const& name)
 }
 
 void 
-http_daemon::stop_site(std::string const& name)
+http_daemon::stop_site(String const& name)
 {
   CLASS_STATE(ds_running);
 
@@ -248,7 +248,7 @@ http_daemon::stop_site(std::string const& name)
 }
 
 void 
-http_daemon::start_listener(int port, http_site* s, std::string const& name)
+http_daemon::start_listener(int port, http_site* s, String const& name)
 {
   CLASS_STATE(ds_starting|ds_running);
 
@@ -262,7 +262,7 @@ http_daemon::start_listener(int port, http_site* s, std::string const& name)
 }
 
 void 
-http_daemon::stop_listener(int port, http_site* s, std::string const& name)
+http_daemon::stop_listener(int port, http_site* s, String const& name)
 {
   CLASS_STATE(ds_running|ds_stopping);
 

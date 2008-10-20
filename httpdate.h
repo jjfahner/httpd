@@ -9,14 +9,14 @@ public:
   // Construction
   //
   httpdate();
-  httpdate(std::string const& src);
+  httpdate(String const& src);
   httpdate(FILETIME const& ft);
   httpdate(SYSTEMTIME const& st);
 
   //
   // Set time
   //
-  bool set(std::string const&);
+  bool set(String const&);
   bool set(SYSTEMTIME const& st);
   void set(FILETIME const& ft);
 
@@ -28,12 +28,12 @@ public:
   //
   // Get string representation
   //
-  std::string str() const;
+  String str() const;
 
   //
   // Implicit conversion to string
   //
-  operator std::string () const;
+  operator String () const;
 
   //
   // Add seconds to date
@@ -60,7 +60,7 @@ httpdate::time() const
 }
 
 inline 
-httpdate::operator std::string () const
+httpdate::operator String () const
 {
   return str();
 }

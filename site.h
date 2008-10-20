@@ -28,7 +28,7 @@ public:
   //
   struct alias 
   {
-    std::string m_name;
+    String m_name;
     int         m_port;
   };
 
@@ -37,8 +37,8 @@ public:
   //
   struct mime_type
   {
-    mime_type(std::string const& extension  = "", 
-              std::string const& type       = "", 
+    mime_type(String const& extension  = "", 
+              String const& type       = "", 
               mime_resolver* resolver       = 0, 
               mime_handler* handler         = 0) 
               : 
@@ -47,8 +47,8 @@ public:
               m_resolver  (resolver),
               m_handler   (handler) { }
 
-    std::string     m_extension;
-    std::string     m_type;
+    String     m_extension;
+    String     m_type;
     mime_resolver*  m_resolver;
     mime_handler*   m_handler;
   };
@@ -61,28 +61,28 @@ public:
   //
   // String list
   //
-  typedef std::list<std::string> stringlist;
+  typedef std::list<String> stringlist;
 
   //
   // String map
   //
-  typedef extmap<std::string, mime_type, httpd_nocase_cmp > mime_map;
+  typedef extmap<String, mime_type, httpd_nocase_cmp > mime_map;
 
   //
   // List from errornumber to page
   //
-  typedef std::map<int, std::string> errordoc_map;
+  typedef std::map<int, String> errordoc_map;
 
   //
   // Construction
   //
-   http_site(std::string const& name, bool autostart = true);
+   http_site(String const& name, bool autostart = true);
   ~http_site();
 
   //
   // Site name
   //
-  std::string const& name() const;
+  String const& name() const;
 
   //
   // Default documents
@@ -109,7 +109,7 @@ public:
   //
   // Add an alias for the http_site
   //
-  void add_alias(std::string const& name, int port);
+  void add_alias(String const& name, int port);
 
   //
   // Retrieve alias list
@@ -120,8 +120,8 @@ public:
   // Set a mime type
   //
   void set_mime_type(
-    std::string const& extension, 
-    std::string const& type, 
+    String const& extension, 
+    String const& type, 
     mime_resolver* = 0, 
     mime_handler*  = 0, 
     bool is_default = false);
@@ -129,7 +129,7 @@ public:
   //
   // Retrieve a mime type or null if it doesn't exist
   //
-  mime_type const* get_mime_type(std::string const& type);
+  mime_type const* get_mime_type(String const& type);
 
   //
   // Set the default mime resolver. Returns the current one
@@ -144,26 +144,26 @@ public:
   //
   // Server string - override on http_site level
   //
-  std::string const& server() const;
-  void set_server(std::string const&);
+  String const& server() const;
+  void set_server(String const&);
 
   //
   // Error documents
   //
-  void set_errorpage(int error, std::string const& path);
+  void set_errorpage(int error, String const& path);
 
 private:
 
   //
   // Resolve a filename
   //
-  mime_handler* resolve(http_context&, std::string const&) const;
+  mime_handler* resolve(http_context&, String const&) const;
 
   //
   // Members
   //
-  std::string       m_name;
-  std::string       m_server;
+  String       m_name;
+  String       m_server;
   aliaslist         m_aliasses;
   errordoc_map      m_errordocs;
   bool              m_autostart;
@@ -173,11 +173,11 @@ private:
 };
 
 
-inline std::string 
-file_extension(std::string const& file)
+inline String 
+file_extension(String const& file)
 {
-  std::string::size_type pos = file.find_last_of('.');
-  if(pos == std::string::npos || pos < file.find_last_of('/'))
+  String::size_type pos = file.find_last_of('.');
+  if(pos == String::npos || pos < file.find_last_of('/'))
   {
     return "";
   }
