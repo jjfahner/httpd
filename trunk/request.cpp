@@ -23,7 +23,7 @@ http_request::method() const
   return m_method;
 }
 
-std::string 
+String 
 http_request::body() const
 {
   return m_body;
@@ -32,7 +32,7 @@ http_request::body() const
 bool 
 http_request::parse_request()
 {
-  std::string::size_type pos;
+  String::size_type pos;
 
   // Parse headers
   if(!parse_headers())
@@ -55,7 +55,7 @@ http_request::parse_request()
   // Set http_request type
   #define METHOD(str,val) \
   if(cmd == str) m_method = val; else
-  std::string cmd = headers["HTTP_COMMAND"];
+  String cmd = headers["HTTP_COMMAND"];
   METHOD("GET",      rm_get)
   METHOD("POST",     rm_post)
   METHOD("CONNECT",  rm_connect)
@@ -69,12 +69,12 @@ http_request::parse_request()
   #undef METHOD
 
   // Determine host/port
-  std::string hp = headers["Host"];
+  String hp = headers["Host"];
   if(hp.empty())
   {
     return false;
   }
-  if((pos = hp.find(':')) == std::string::npos)
+  if((pos = hp.find(':')) == String::npos)
   {
     m_headers["HTTP_HOST"] = hp;
     m_headers["HTTP_PORT"] = 80;
@@ -97,9 +97,9 @@ http_request::parse_request()
   // Decode username/password if available
   if(headers.contains("Authorization"))
   {
-    std::string auth;
-    std::string type;
-    std::string::size_type from;
+    String auth;
+    String type;
+    String::size_type from;
 
     // Extract header values
     auth = headers["Authorization"];
@@ -126,7 +126,7 @@ bool
 http_request::parse_headers()
 {
   bool firstline = true;
-  std::string line;
+  String line;
   for(;;)
   {
     // Read a line
@@ -161,11 +161,11 @@ http_request::parse_headers()
 }
 
 bool
-http_request::parse_line(std::string const& line)
+http_request::parse_line(String const& line)
 {
-  #define VALID_POS(arg) if(std::string::npos == (arg)) return false;
+  #define VALID_POS(arg) if(String::npos == (arg)) return false;
 
-  std::string::size_type pos1, pos2;
+  String::size_type pos1, pos2;
 
   // First line is the http request
   if(m_headers.empty())
@@ -174,7 +174,7 @@ http_request::parse_line(std::string const& line)
     VALID_POS(pos1 = line.find(' '));
 
     // Extract command
-    std::string cmd = line.substr(0, pos1);
+    String cmd = line.substr(0, pos1);
     VALID_POS(pos1 = line.find_first_not_of(' ', pos1));
 
     // Add to headers
@@ -184,10 +184,10 @@ http_request::parse_line(std::string const& line)
     VALID_POS(pos2 = line.find(' ', pos1));
 
     // Extract query
-    std::string uri = line.substr(pos1, pos2 - pos1);
+    String uri = line.substr(pos1, pos2 - pos1);
 
     // Extract query params
-    if((pos1 = uri.find('?')) != std::string::npos)
+    if((pos1 = uri.find('?')) != String::npos)
     {
       if(!parse_url_params(uri.substr(pos1 + 1), m_getvars))
       {
@@ -221,18 +221,18 @@ http_request::parse_line(std::string const& line)
 }
 
 bool 
-http_request::parse_url_params(std::string const& params, header_map& map)
+http_request::parse_url_params(String const& params, header_map& map)
 {
-  std::string::size_type pos1 = 0;
-  std::string::size_type pos2 = 0;
-  std::string::size_type pos3;
-  std::string param;
+  String::size_type pos1 = 0;
+  String::size_type pos2 = 0;
+  String::size_type pos3;
+  String param;
 
   // Enumerate params
-  for(; pos2 != std::string::npos; )
+  for(; pos2 != String::npos; )
   {
     // Find next param
-    if((pos2 = params.find('&', pos1)) == std::string::npos)
+    if((pos2 = params.find('&', pos1)) == String::npos)
     {
       param = params.substr(pos1);
     }
@@ -243,7 +243,7 @@ http_request::parse_url_params(std::string const& params, header_map& map)
     }
 
     // Find name/value separator
-    if((pos3 = param.find('=')) == std::string::npos)
+    if((pos3 = param.find('=')) == String::npos)
     {
       return false;
     }
@@ -279,12 +279,12 @@ http_request::parse_postdata()
 
   // Null-terminate
   buf[len] = 0;
-  std::string data = buf;
+  String data = buf;
   delete [] buf;
 
   // Hack: Mozilla appears to add trailing empty lines,
   // so we remove any empty lines following the POST
-  std::string temp;
+  String temp;
   while(m_con.read_line(temp, true))  // peek
   {
     if(!temp.empty())

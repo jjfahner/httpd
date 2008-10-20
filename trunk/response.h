@@ -41,8 +41,8 @@ public:
   //
   // Status
   //
-  std::string const& status() const;
-  void set_status(std::string const&);
+  String const& status() const;
+  void set_status(String const&);
 
   //
   // Headers
@@ -72,7 +72,7 @@ public:
   //
   // Write data to client
   //
-  void send(std::string const&);
+  void send(String const&);
   void send(char const* data, int size = 0);
 
   //
@@ -90,7 +90,7 @@ private:
   //
   // Create error document
   //
-  void create_error_doc(std::string& msg);
+  void create_error_doc(String& msg);
 
   //
   // Implementation
@@ -102,7 +102,7 @@ private:
   //
   connection&         m_con;
   http_versions       m_ver;
-  std::string         m_status;
+  String         m_status;
   char                m_buffer[RESPONSE_BUFSIZE];
   char*               m_bufptr;
   response_states     m_state;
@@ -112,7 +112,7 @@ private:
 //
 // Operators for writing data
 //
-inline http_response& operator << (http_response& os, std::string const& s)
+inline http_response& operator << (http_response& os, String const& s)
 {
   os.send(s.c_str(), s.length());
   return os;

@@ -42,7 +42,7 @@ public:
   //
   // Requested host name/port
   //
-  std::string const&  host() const;
+  String const&  host() const;
   int                 port() const;
 
   //
@@ -63,7 +63,7 @@ public:
   //
   // Request body
   //
-  std::string body() const;
+  String body() const;
 
 private:
 
@@ -75,12 +75,12 @@ private:
   //
   // Parse an individual header line
   //
-  bool parse_line(std::string const&);
+  bool parse_line(String const&);
 
   //
   // Parse the get params
   //
-  bool parse_url_params(std::string const&, header_map&);
+  bool parse_url_params(String const&, header_map&);
 
   //
   // Parse POST form data
@@ -95,7 +95,7 @@ private:
   header_map      m_headers;
   header_map      m_getvars;
   header_map      m_postvars;
-  std::string     m_body;
+  String     m_body;
 
 };
 

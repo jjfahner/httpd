@@ -6,8 +6,8 @@
 // Base64 encoding
 //
 
-std::string 
-base64_encode(std::string const& input)
+String 
+base64_encode(String const& input)
 {
   // Encoding table
   static char const* enctable = 
@@ -15,7 +15,7 @@ base64_encode(std::string const& input)
     "ghijklmnopqrstuvwxyz0123456789+/";
 
   // Output string
-  std::string dst;
+  String dst;
 
   // Extract data and length
   char const*  src = input.c_str();
@@ -50,8 +50,8 @@ base64_encode(std::string const& input)
 // Base64 decoding
 //
 
-std::string 
-base64_decode(std::string const& input)
+String 
+base64_decode(String const& input)
 {
   static char const dectable[] = 
   { 
@@ -64,7 +64,7 @@ base64_decode(std::string const& input)
    49, 50, 51,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   };
 
-  std::string dst;
+  String dst;
 
   // Reserve space for output
   dst.reserve(input.length() / 4 * 3 + 1);
@@ -132,13 +132,13 @@ struct pred_must_url_encode {
 // an escape character.
 //
 
-std::string 
-url_encode(std::string in)
+String 
+url_encode(String in)
 {
   // Replace non-alpanumerics with hex code
-  std::string::const_iterator io = in.begin();
-  std::string::const_iterator it = io;
-  std::string::const_iterator ie = in.end();
+  String::const_iterator io = in.begin();
+  String::const_iterator it = io;
+  String::const_iterator ie = in.end();
   char sz[4] = { '%', 0, 0, 0 };
   for(;; it += 3)
   {
@@ -169,18 +169,18 @@ url_encode(std::string in)
 // Decode a url, removing all escape characters
 //
 
-std::string 
-url_decode(std::string in)
+String 
+url_decode(String in)
 {
   // Convert '+' to ' '
   std::replace(in.begin(), in.end(), '+', ' ');
 
   // Replace hex with char
-  std::string::size_type pos = 0;
+  String::size_type pos = 0;
   for(;; ++pos)
   {
     // Find hex offset
-    if((pos = in.find('%', pos)) == std::string::npos)
+    if((pos = in.find('%', pos)) == String::npos)
     {
       return in;
     }

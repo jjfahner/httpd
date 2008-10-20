@@ -10,7 +10,7 @@ public:
   //
   // Construction
   //
-  filesystem_handler(std::string const& path, WIN32_FIND_DATA const& wfd);
+  filesystem_handler(String const& path, WIN32_FIND_DATA const& wfd);
 
   //
   // GET handler
@@ -57,7 +57,7 @@ private:
   //
   // Member data
   //
-  std::string     m_path;
+  String     m_path;
   WIN32_FIND_DATA m_wfd;
 
 };

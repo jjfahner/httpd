@@ -2,7 +2,7 @@
 #define HTTPD_STRING_H
 
 //
-// Implement string as wrapper around std::string
+// Implement string as wrapper around String
 //
 class String : public std::string
 {
@@ -12,6 +12,13 @@ public:
   // Base class
   //
   typedef std::string Base;
+
+  //
+  // Empty construction
+  //
+  String()
+  {
+  }
 
   //
   // Construction from pointer
@@ -26,6 +33,13 @@ public:
   String(wchar_t const* str)
   {
     // TODO, probably best in source file
+  }
+
+  //
+  // Construction from iterator range
+  //
+  String(Base::const_iterator const& it, Base::const_iterator const& ie) : Base(it, ie)
+  {
   }
 
   //

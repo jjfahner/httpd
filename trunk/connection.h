@@ -28,12 +28,12 @@ public:
   //
   // Retrieve a line from the buffer
   //
-  bool read_line(std::string& line, bool peek = false);
+  bool read_line(String& line, bool peek = false);
 
   //
   // Retrieve a line from the buffer
   //
-  bool read_line(std::string& line, int size);
+  bool read_line(String& line, int size);
 
   //
   // Retrieve a specific number of bytes
@@ -43,7 +43,7 @@ public:
   //
   // Log a string
   //
-  void log(std::string const&);
+  void log(String const&);
 
 private:
 

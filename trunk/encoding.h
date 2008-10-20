@@ -4,22 +4,22 @@
 //
 // Base64 encode a string
 //
-std::string base64_encode(std::string const& input);
+String base64_encode(String const& input);
 
 //
 // Decode base64 encoded string
 //
-std::string base64_decode(std::string const& input);
+String base64_decode(String const& input);
 
 //
 // Perform url encoding on string
 //
-std::string url_encode(std::string input);
+String url_encode(String input);
 
 //
 // Perform url decoding on string
 //
-std::string url_decode(std::string input);
+String url_decode(String input);
 
 
 #endif  // #ifndef ENCODING_H

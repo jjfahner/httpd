@@ -34,7 +34,7 @@
 // Feature not implemented
 class notimpl_exception : public std::exception
 {
-  static inline std::string format_error(char const* file, int line)
+  static inline String format_error(char const* file, int line)
   {
     char buff[1000];
     sprintf_s(buff, "%s(%d) : Feature not implemented", file, line);

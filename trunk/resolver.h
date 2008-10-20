@@ -12,7 +12,7 @@ class mime_resolver
 {
 public:
   virtual ~mime_resolver(){}
-  virtual mime_handler* resolve(http_context& context, std::string const& uri) = 0;
+  virtual mime_handler* resolve(http_context& context, String const& uri) = 0;
 };
 
 

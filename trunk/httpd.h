@@ -30,7 +30,7 @@ class http_daemon :
 {
 public:
 
-  typedef std::map<std::string, http_site*, httpd_nocase_cmp > site_map;
+  typedef std::map<String, http_site*, httpd_nocase_cmp > site_map;
   typedef site_map::const_iterator site_iterator;
 
   //
@@ -41,12 +41,12 @@ public:
   //
   // Open the log file
   //
-  void init_logfile(std::string filename = "");
+  void init_logfile(String filename = "");
 
   //
   // Add a line to the log
   //
-  void log(std::string line);
+  void log(String line);
 
   //
   // Start/stop the server
@@ -57,8 +57,8 @@ public:
   //
   // Start/stop a http_site by name
   //
-  void start_site(std::string const& name);
-  void stop_site(std::string const& name);
+  void start_site(String const& name);
+  void stop_site(String const& name);
 
   //
   // Add a http_site
@@ -68,7 +68,7 @@ public:
   //
   // Retrieve a http_site
   //
-  http_site* get_site(std::string const& name, int port) const;
+  http_site* get_site(String const& name, int port) const;
 
   //
   // Site enumerators
@@ -105,8 +105,8 @@ private:
   //
   friend void http_site::start();
   friend void http_site::stop();
-  void start_listener(int port, http_site*, std::string const& name);
-  void stop_listener(int port, http_site*,  std::string const& name);
+  void start_listener(int port, http_site*, String const& name);
+  void stop_listener(int port, http_site*,  String const& name);
 
   //
   // Current number of connections
@@ -127,7 +127,7 @@ private:
   //
   // Log file
   //
-  std::string m_logfile;
+  String m_logfile;
   HANDLE      m_hlogfile;
 };
 

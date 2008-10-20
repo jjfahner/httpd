@@ -81,7 +81,7 @@ httpdate::httpdate()
   set_now();
 }
 
-httpdate::httpdate(std::string const& src)
+httpdate::httpdate(String const& src)
 {
   if(!set(src))
   {
@@ -103,7 +103,7 @@ httpdate::httpdate(SYSTEMTIME const& st)
 }
 
 bool
-httpdate::set(std::string const& src)
+httpdate::set(String const& src)
 {
   char wkday[4];
   char mon[4];
@@ -173,7 +173,7 @@ httpdate::set_now()
   set(ft);
 }
 
-std::string 
+String 
 httpdate::str() const
 {
   SYSTEMTIME st;

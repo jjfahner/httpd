@@ -9,7 +9,7 @@
 #include "resolver.h"
 #include "fsresolver.h"
 
-http_site::http_site(std::string const& name, bool autostart) :
+http_site::http_site(String const& name, bool autostart) :
 class_state<site_states>(ss_stopped),
 m_name                (name),
 m_autostart           (autostart)
@@ -43,20 +43,20 @@ http_site::~http_site()
 //  }
 }
 
-std::string const& 
+String const& 
 http_site::name() const
 {
   return m_name;
 }
 
-std::string const& 
+String const& 
 http_site::server() const
 {
   return m_server;
 }
 
 void 
-http_site::set_server(std::string const& s)
+http_site::set_server(String const& s)
 {
   m_server = s;
 }
@@ -121,7 +121,7 @@ http_site::stop()
 }
 
 void 
-http_site::add_alias(std::string const& name, int port)
+http_site::add_alias(String const& name, int port)
 {
   CLASS_STATE(ss_stopped);
   alias a;
@@ -137,8 +137,8 @@ http_site::aliasses() const
 }
 
 void 
-http_site::set_mime_type(std::string const& extension, 
-                         std::string const& type, 
+http_site::set_mime_type(String const& extension, 
+                         String const& type, 
                          mime_resolver* resolver, 
                          mime_handler*  handler,
                          bool is_default)
@@ -165,7 +165,7 @@ http_site::set_mime_type(std::string const& extension,
 }
 
 http_site::mime_type const*
-http_site::get_mime_type(std::string const& type)
+http_site::get_mime_type(String const& type)
 {
   mime_map::const_iterator it, ie;
   it = m_mime_types.begin();
@@ -185,22 +185,22 @@ http_site::get_mime_type(std::string const& type)
 }
 
 void 
-http_site::set_errorpage(int error, std::string const& path)
+http_site::set_errorpage(int error, String const& path)
 {
   m_errordocs[error] = path;
 }
 
 mime_handler* 
-http_site::resolve(http_context& context, std::string const& uri) const
+http_site::resolve(http_context& context, String const& uri) const
 {
   // Determine some path properties
-  std::string::size_type ln = uri.length();
-  std::string::size_type es = uri.find_last_of(".");
-  std::string::size_type ss = uri.find_last_of("/");
+  String::size_type ln = uri.length();
+  String::size_type es = uri.find_last_of(".");
+  String::size_type ss = uri.find_last_of("/");
 
   // Extract extension
-  std::string ext;
-  if(es != std::string::npos && (ss == std::string::npos || ss < es))
+  String ext;
+  if(es != String::npos && (ss == String::npos || ss < es))
   {
     ext = uri.substr(es + 1);
   }
@@ -262,8 +262,8 @@ http_site::resolve(http_context& context, std::string const& uri) const
   }
 
   // Determine the required path separator
-  std::string separator;
-  if(ss != std::string::npos && ss != ln - 1)
+  String separator;
+  if(ss != String::npos && ss != ln - 1)
   {
     separator = "/";
   }
@@ -273,7 +273,7 @@ http_site::resolve(http_context& context, std::string const& uri) const
   stringlist::const_iterator ie = default_docs.end();
   for(; it != ie; ++it)
   {
-    std::string newuri = uri + separator + *it;
+    String newuri = uri + separator + *it;
     if(mime_handler* handler = resolve(context, newuri))
     {
       return handler;
@@ -296,7 +296,7 @@ http_site::handle_request(http_context& context)
   }
 
   // Determine request uri
-  std::string uri = context.request.headers["HTTP_URI"];
+  String uri = context.request.headers["HTTP_URI"];
 
   // Resolve the path
   mime_handler* handler = resolve(context, uri);
@@ -307,7 +307,7 @@ http_site::handle_request(http_context& context)
   }
 
   // Determine default content-type
-  std::string content_type = m_mime_types[context.resolved_ext]->m_type;
+  String content_type = m_mime_types[context.resolved_ext]->m_type;
   if(content_type.empty())
   {
     content_type = m_mime_default.m_type;

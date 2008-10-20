@@ -24,7 +24,7 @@ listener::port() const
 }
 
 http_site*
-listener::get_site(std::string const& name)
+listener::get_site(String const& name)
 {
   site_map::iterator it;
   if((it = m_sites.find(name)) == m_sites.end())
@@ -35,7 +35,7 @@ listener::get_site(std::string const& name)
 }
 
 void 
-listener::attach(http_site* s, std::string const& name)
+listener::attach(http_site* s, String const& name)
 {
   if(m_sites.find(name) != m_sites.end())
   {
@@ -45,7 +45,7 @@ listener::attach(http_site* s, std::string const& name)
 }
 
 long 
-listener::detach(http_site*, std::string const& name)
+listener::detach(http_site*, String const& name)
 {
   site_map::iterator it;
   if((it = m_sites.find(name)) == m_sites.end())

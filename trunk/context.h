@@ -36,13 +36,13 @@ public:
   //
   // The uri which was resolved
   //
-  std::string resolved_uri;
-  std::string resolved_ext;
+  String resolved_uri;
+  String resolved_ext;
 
   //
   // Username
   //
-  std::string username;
+  String username;
 
   //
   // User data. May be used freely

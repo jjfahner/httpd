@@ -3,7 +3,7 @@
 #include "context.h"
 #include "httpdate.h"
 
-filesystem_handler::filesystem_handler(std::string const& path, WIN32_FIND_DATA const& wfd) :
+filesystem_handler::filesystem_handler(String const& path, WIN32_FIND_DATA const& wfd) :
 m_path  (path)
 {
   memcpy(&m_wfd, &wfd, sizeof(m_wfd));

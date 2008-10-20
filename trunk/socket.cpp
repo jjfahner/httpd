@@ -78,7 +78,7 @@ m_wsainit (new wsainit())
   init();
 }
 
-socket::socket(std::string const& hostname, int port, sync_modes sm) :
+socket::socket(String const& hostname, int port, sync_modes sm) :
 m_wsainit (new wsainit())
 {
   init();
@@ -147,7 +147,7 @@ socket::port() const
   return m_port;
 }
 
-std::string 
+String 
 socket::peer_addr() const
 {
   // Resolve once
@@ -169,7 +169,7 @@ socket::peer_addr() const
   return m_peer_addr;
 }
 
-std::string 
+String 
 socket::peer_name() const
 {
   // Resolve once
@@ -231,7 +231,7 @@ socket::sync_mode() const
 }
 
 void 
-socket::connect(std::string const& hostname, int port, sync_modes sm)
+socket::connect(String const& hostname, int port, sync_modes sm)
 {
   CLASS_STATE(ss_closed);
 
@@ -563,7 +563,7 @@ socket::avail(int timeout) const
 }
 
 void 
-socket::send(std::string const& buf, int timeout)
+socket::send(String const& buf, int timeout)
 {
   send((void*)buf.c_str(), buf.length(), timeout);
 }
@@ -722,13 +722,13 @@ socket::impl_on_accept()
 /////////////////////////////////////////////////////////////////////////////////////
 // Exceptions
 
-socket::socket_exception::socket_exception(std::string const& what, int error) :
+socket::socket_exception::socket_exception(String const& what, int error) :
 exception(format_error(what, error))
 {
 }
 
-/*static*/ std::string 
-socket::socket_exception::format_error(std::string const& what, int error)
+/*static*/ String 
+socket::socket_exception::format_error(String const& what, int error)
 {
   char buff[1000];
   sprintf_s(buff, "Socket error: %s (%d)", what.c_str(), error);

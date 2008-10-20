@@ -35,7 +35,7 @@ connection::~connection()
 }
 
 void 
-connection::log(std::string const& line)
+connection::log(String const& line)
 {
   httpd.log(line);
   //m_log << line << "\n\t";
@@ -301,7 +301,7 @@ connection::read_avail()
 }
 
 bool 
-connection::read_line(std::string& line, bool peek)
+connection::read_line(String& line, bool peek)
 {
   // Check if we have data
   if(m_bufuse == m_bufpos)
@@ -346,7 +346,7 @@ connection::read_line(std::string& line, bool peek)
 }
 
 bool 
-connection::read_line(std::string& line, int size)
+connection::read_line(String& line, int size)
 {
   // Ensure we have the data. Basically, this loops,
   // reading data every iteration, using a timeout.

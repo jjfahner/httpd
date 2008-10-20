@@ -3,7 +3,7 @@
 #include "fshandler.h"
 #include "context.h"
 
-filesystem_resolver::filesystem_resolver(std::string const& root) :
+filesystem_resolver::filesystem_resolver(String const& root) :
 m_root (root)
 {
 }
@@ -13,10 +13,10 @@ filesystem_resolver::~filesystem_resolver()
 }
 
 mime_handler* 
-filesystem_resolver::resolve(http_context&, std::string const& uri)
+filesystem_resolver::resolve(http_context&, String const& uri)
 {
   // Fetch request path
-  std::string path = uri;
+  String path = uri;
   
   // Replace slashes
   std::replace(path.begin(), path.end(), '/', '\\');
@@ -44,13 +44,13 @@ filesystem_resolver::resolve(http_context&, std::string const& uri)
 }
 
 bool
-filesystem_resolver::resolve_updirs(std::string path)
+filesystem_resolver::resolve_updirs(String path)
 {
   path;
   return true;
 
-// std::string::size_type pos1;
-// if((pos1 = path.find('\\') == std::string::npos)
+// String::size_type pos1;
+// if((pos1 = path.find('\\') == String::npos)
 // {
 // }
 
