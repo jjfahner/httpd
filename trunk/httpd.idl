@@ -36,15 +36,6 @@ library HTTPD
     [helpstring("Retrieve sites collection"), propget]
     HRESULT Sites([out, retval] ISites** sites);
 
-    [helpstring("Retrieve a site by name")]
-    HRESULT GetSite([in] BSTR name, [out, retval] ISite** site);
-
-    [helpstring("Add a new site to the server")]
-    HRESULT AddSite([in] BSTR name, [out, retval] ISite** site);
-
-    [helpstring("Remove a site from the server")]
-    HRESULT RemoveSite([in] BSTR name);
-
     [helpstring("Start the server")]
     HRESULT Start();
 
@@ -120,7 +111,7 @@ library HTTPD
     HRESULT _NewEnum([out, retval] IUnknown** ppUnk);
 
     [helpstring("Retrieve a site item"), id(DISPID_VALUE), propget]
-    HRESULT Item([in] BSTR name, [out, retval] ISite** pSite);
+    HRESULT Item([in] VARIANT index, [out, retval] ISite** pSite);
 
     [helpstring("Retrieve the number of sites"), propget]
     HRESULT Count([out, retval] long* pVal);

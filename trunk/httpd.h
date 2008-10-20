@@ -30,7 +30,7 @@ class http_daemon :
 {
 public:
 
-  typedef std::map<String, http_site*, httpd_nocase_cmp > site_map;
+  typedef std::map<String, http_site*, httpd_nocase_cmp> site_map;
   typedef site_map::const_iterator site_iterator;
 
   //

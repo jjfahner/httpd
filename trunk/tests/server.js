@@ -9,7 +9,7 @@ function test()
   var server = WScript.CreateObject("HTTPD.Server");
 
   // Add a site
-  var site = server.AddSite("main");
+  var site = server.Sites.Add("main");
   if(site == null)
   {
     print("Error: failed to add site to server");
@@ -21,6 +21,16 @@ function test()
   {
     print("Error: expected 1 site in collection");
     return;
+  }
+
+  // Add a second site
+  server.Sites.Add("test1");
+  server.Sites.Add("test2");
+
+  // Enumerate sites
+  for(var i = 0; i < server.Sites.Count; ++i)
+  {
+    print(server.Sites(i).Name);
   }
 
   // Retrieve it through the collection
