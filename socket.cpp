@@ -588,12 +588,13 @@ socket::send(void* pbuf, int size, int /*timeout*/)
   int s;
   if((s = ::send(m_socket, (char const*)pbuf, size, 0)) == SOCKET_ERROR)
   {
-    if(WSAGetLastError() == WSAEWOULDBLOCK && m_async)
+    int error = WSAGetLastError();
+    if(error == WSAEWOULDBLOCK && m_async)
     {
       NOT_IMPLEMENTED;
     }
     else
-    {      
+    {
       SOCKET_EXCEPTION("Failed to write to socket");
     }
   }

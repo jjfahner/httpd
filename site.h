@@ -39,17 +39,14 @@ public:
   {
     mime_type(String const& extension  = "", 
               String const& type       = "", 
-              mime_resolver* resolver       = 0, 
-              mime_handler* handler         = 0) 
+              mime_handler* handler    = 0) 
               : 
               m_extension (extension), 
               m_type      (type), 
-              m_resolver  (resolver),
               m_handler   (handler) { }
 
-    String     m_extension;
-    String     m_type;
-    mime_resolver*  m_resolver;
+    String          m_extension;
+    String          m_type;
     mime_handler*   m_handler;
   };
 
@@ -122,24 +119,24 @@ public:
   void set_mime_type(
     String const& extension, 
     String const& type, 
-    mime_resolver* = 0, 
     mime_handler*  = 0, 
     bool is_default = false);
 
   //
   // Retrieve a mime type or null if it doesn't exist
   //
-  mime_type const* get_mime_type(String const& type);
+  mime_type const* mime_type_from_type(String const& type);
+  mime_type const* mime_type_from_ext(String const& ext);
 
   //
   // Retrieve the default mime resolver.
   //
-  mime_resolver* default_resolver() const;
+  mime_resolver* resolver() const;
 
   //
   // Set the default mime resolver. Returns the current one
   //
-  void set_default_resolver(mime_resolver* resolver);
+  void set_resolver(mime_resolver* resolver);
 
   //
   // Handle a http_request
@@ -167,14 +164,15 @@ private:
   //
   // Members
   //
-  String       m_name;
-  String       m_server;
-  aliaslist         m_aliasses;
-  errordoc_map      m_errordocs;
-  bool              m_autostart;
-  bool              m_running;
-  mime_type         m_mime_default;
-  mime_map          m_mime_types;
+  String          m_name;
+  String          m_server;
+  aliaslist       m_aliasses;
+  errordoc_map    m_errordocs;
+  bool            m_autostart;
+  bool            m_running;
+  mime_resolver*  m_resolver;
+  mime_type       m_mime_default;
+  mime_map        m_mime_types;
 };
 
 

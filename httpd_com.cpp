@@ -104,7 +104,7 @@ Site::get_Name(BSTR *name)
 HRESULT STDMETHODCALLTYPE 
 Site::get_Root(BSTR *root)
 {
-  mime_resolver* resolver = m_site->default_resolver();
+  mime_resolver* resolver = m_site->resolver();
   filesystem_resolver* fs = dynamic_cast<filesystem_resolver*>(resolver);
   if(fs)
   {
@@ -120,7 +120,7 @@ Site::get_Root(BSTR *root)
 HRESULT STDMETHODCALLTYPE 
 Site::put_Root(BSTR root)
 {
-  m_site->set_default_resolver(new filesystem_resolver(root));
+  m_site->set_resolver(new filesystem_resolver(m_site, root));
   return S_OK;
 }
 
@@ -133,9 +133,8 @@ Site::AddAlias(BSTR name, int port)
 
 HRESULT STDMETHODCALLTYPE 
 Site::AddMimeType(BSTR extension, 
-                  BSTR mimetype /*, 
-                  IResolver* resolver, 
-                  IHandler* handler */ )
+                  BSTR mimetype, 
+                  VARIANT handler)
 {
   m_site->set_mime_type(extension, mimetype);
   return S_OK;

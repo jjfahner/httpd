@@ -11,36 +11,18 @@
 
 http_site::http_site(String const& name, bool autostart) :
 class_state<site_states>(ss_stopped),
-m_name                (name),
-m_autostart           (autostart)
+m_name      (name),
+m_autostart (autostart),
+m_resolver  (0)
 {
 }
 
 http_site::~http_site()
 {
-  if(m_mime_default.m_resolver)
-  {
-    delete m_mime_default.m_resolver;
-  }
   if(m_mime_default.m_handler)
   {
     delete m_mime_default.m_handler;
   }
-
-//  mime_map::const_iterator it, ie;
-//  it = m_mime_types.begin();
-//  ie = m_mime_types.end();
-//  for(; it != ie; ++it)
-//  {
-//    if(it->second.m_resolver)
-//    {
-//      delete it->second.m_resolver;
-//    }
-//    if(it->second.m_handler)
-//    {
-//      delete it->second.m_handler;
-//    }
-//  }
 }
 
 String const& 
@@ -74,16 +56,16 @@ http_site::set_autostart(bool b)
 }
 
 mime_resolver* 
-http_site::default_resolver() const
+http_site::resolver() const
 {
-  return m_mime_default.m_resolver;
+  return m_resolver;
 }
 
 void
-http_site::set_default_resolver(mime_resolver* resolver)
+http_site::set_resolver(mime_resolver* resolver)
 {
-  delete m_mime_default.m_resolver;
-  m_mime_default.m_resolver = resolver;
+  delete m_resolver;
+  m_resolver = resolver;
 }
 
 bool
@@ -145,7 +127,6 @@ http_site::aliasses() const
 void 
 http_site::set_mime_type(String const& extension, 
                          String const& type, 
-                         mime_resolver* resolver, 
                          mime_handler*  handler,
                          bool is_default)
 {
@@ -153,11 +134,6 @@ http_site::set_mime_type(String const& extension,
   {
     m_mime_default.m_extension = extension;
     m_mime_default.m_type      = type;
-    if(resolver)
-    {
-      delete m_mime_default.m_resolver;
-      m_mime_default.m_resolver = resolver;
-    }
     if(handler)
     {
       delete m_mime_default.m_handler;
@@ -166,12 +142,12 @@ http_site::set_mime_type(String const& extension,
   }
   else
   {
-    m_mime_types[extension] = mime_type(extension, type, resolver, handler);
+    m_mime_types[extension] = mime_type(extension, type, handler);
   }
 }
 
 http_site::mime_type const*
-http_site::get_mime_type(String const& type)
+http_site::mime_type_from_type(String const& type)
 {
   mime_map::const_iterator it, ie;
   it = m_mime_types.begin();
@@ -190,6 +166,18 @@ http_site::get_mime_type(String const& type)
   return 0;
 }
 
+http_site::mime_type const* 
+http_site::mime_type_from_ext(String const& ext)
+{
+  mime_map::const_iterator it, ie;
+  it = m_mime_types.find(ext);
+  if(it == m_mime_types.end())
+  {
+    return 0;
+  }
+  return &it->second;
+}
+
 void 
 http_site::set_errorpage(int error, String const& path)
 {
@@ -199,73 +187,22 @@ http_site::set_errorpage(int error, String const& path)
 mime_handler* 
 http_site::resolve(http_context& context, String const& uri) const
 {
+  // Check resolver
+  if(!m_resolver)
+  {
+    return 0;
+  }
+
+  // Resolve through resolver
+  if(mime_handler* handler = m_resolver->resolve(context, uri))
+  {
+    return handler;
+  }
+
   // Determine some path properties
   String::size_type ln = uri.length();
   String::size_type es = uri.find_last_of(".");
   String::size_type ss = uri.find_last_of("/");
-
-  // Extract extension
-  String ext;
-  if(es != String::npos && (ss == String::npos || ss < es))
-  {
-    ext = uri.substr(es + 1);
-  }
-
-  // Extension found
-  if(ext.length())
-  {
-    // The resolver/handler for this request
-    mime_resolver* resolver = 0;
-    mime_handler*  handler  = 0;
-
-    // Resolver for specific type
-    mime_type const& mime = m_mime_types[ext];
-    resolver = mime.m_resolver;
-    if(resolver == 0)
-    {
-      handler = mime.m_handler;
-    }
-
-    // Fallback to default resolver
-    if(resolver == 0 && handler == 0)
-    {
-      resolver = m_mime_default.m_resolver;
-    }    
-
-    // Fallback to default handler
-    if(resolver == 0 && handler == 0)
-    {
-      handler = m_mime_default.m_handler;
-    }
-
-    // Resolver but no handler
-    if(resolver != 0 && handler == 0)
-    {
-      // Resolve the uri
-      handler = resolver->resolve(context, uri);
-    }
-
-    // If there's a handler, set resolved uri/ext
-    if(handler)
-    {
-      context.resolved_uri = uri;
-      context.resolved_ext = ext;
-    }
-
-    // Done
-    return handler;
-  }
-
-  // Try to resolve through the default resolver
-  if(m_mime_default.m_resolver)
-  {
-    if(mime_handler* handler = m_mime_default.m_resolver->resolve(context, uri))
-    {
-      context.resolved_uri = uri;
-      context.resolved_ext = "";
-      return handler;
-    }
-  }
 
   // Determine the required path separator
   String separator;
@@ -280,7 +217,7 @@ http_site::resolve(http_context& context, String const& uri) const
   for(; it != ie; ++it)
   {
     String newuri = uri + separator + *it;
-    if(mime_handler* handler = resolve(context, newuri))
+    if(mime_handler* handler = m_resolver->resolve(context, newuri))
     {
       return handler;
     }
