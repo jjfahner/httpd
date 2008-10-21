@@ -114,7 +114,7 @@ filesystem_handler::handler_impl(http_context& context)
   // Determine file size
   DWORD size = m_wfd.nFileSizeLow;
 
-  static const size_t bufsize = 1024;
+  static const size_t bufsize = 4096;
 
   // Write file in chunks
   char  buff[bufsize];
