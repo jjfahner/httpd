@@ -32,9 +32,6 @@ m_start (GetTickCount())
 
 http_response::~http_response()
 {
-  // Flush response
-  finish();
-
   char buf[50];
   sprintf_s(buf, "Request processed in %d ms", GetTickCount() - m_start);
   httpd.log(buf);
@@ -211,12 +208,19 @@ http_response::send(char const* data, int size)
   }
   else
   {
-    // TODO build in buffer
-    char hdr[15];
-    sprintf(hdr, "%x\r\n", size);
-    m_con.send(hdr, strlen(hdr));
-    m_con.send(data, size);
-    m_con.send("\r\n", 2);
+    char buf[6000];
+    char* ptr = buf;
+    
+    sprintf_s(buf, "%x\r\n", size);
+    ptr += strlen(buf);
+
+    memcpy(ptr, data, size);
+    ptr += size;
+
+    memcpy(ptr, "\r\n", 2);
+    ptr += 2;
+
+    m_con.send(buf, ptr - buf);
   }
 }
 
@@ -235,10 +239,14 @@ http_response::finish()
   }
 
   // From headers sent
-  if(m_state == rs_headers && headers["Transfer-Encoding"] == "chunked")
+  if(m_state == rs_headers)
   {
-    // Send empty chunk
-    m_con.send("0\r\n\r\n");
+    // Handle chunked encoding
+    if(headers["Transfer-Encoding"] == "chunked")
+    {
+      // Send last chunk
+      m_con.send("0\r\n\r\n");
+    }
   }
 
   // Last state

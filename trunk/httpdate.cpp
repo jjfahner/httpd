@@ -108,40 +108,37 @@ httpdate::set(String const& src)
   char wkday[4];
   char mon[4];
   char tz[4];
-
+  
   SYSTEMTIME st;
   memset(&st, 0, sizeof(st));
 
-  // Parse http date
-  int args = sscanf_s(
-    src.c_str(),
-    "%3c, %02d %3c %4d %2d:%2d:%2d %3c", 
-    wkday,
-    &st.wDay,
-    mon,
-    &st.wYear,
-    &st.wHour,
-    &st.wMinute,
-    &st.wSecond,
-    tz);
+  // Parse fields from date
+  char const* psz = src.c_str();
+  strncpy(wkday, psz, 3); psz += 5;
+  st.wDay = atoi(psz); psz += 3;
+  strncpy(mon, psz, 3); psz += 4;
+  st.wYear = atoi(psz); psz += 5;
+  st.wHour = atoi(psz); psz += 3;
+  st.wMinute = atoi(psz); psz += 3;
+  st.wSecond = atoi(psz); psz += 3;
+  strncpy(tz, psz, 3);
 
-  if(args != 8)
-  {
-    return false;
-  }
-
+  // Null-terminate strings
   wkday[3]  = 0;
   mon[3]    = 0;
   tz[3]     = 0;
 
+  // Check timezone
   if(strcmp(tz, "GMT"))
   {
     return false;
   }
 
+  // Copy string fields
   st.wDayOfWeek = (WORD) weekday(wkday);
   st.wMonth     = (WORD) month_abr(mon);
 
+  // Succeeded
   return set(st);
 }
 
