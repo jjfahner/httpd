@@ -6,10 +6,11 @@
 const String server_string = "httpd/1.0(Win32)";
 
 http_response::http_response(connection& con) :
-m_con   (con),
-m_ver   (httpver_1_1),
-m_state (rs_initial),
-m_start (GetTickCount())
+m_con     (con),
+m_ver     (httpver_1_1),
+m_state   (rs_initial),
+m_start   (GetTickCount()),
+m_buffered(true)
 {
   // Default http_response status
   m_status = "200 OK";
@@ -191,8 +192,8 @@ http_response::send(char const* data, int size)
   // Add to buffer
   m_buffer.append(data, size);
 
-  // Flush when over limit
-  if(m_buffer.size() > 4096)
+  // Flush when not buffered or over limit
+  if(!m_buffered || m_buffer.size() > 4096)
   {
     flush();
   }

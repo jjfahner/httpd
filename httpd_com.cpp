@@ -3,6 +3,7 @@
 #include "httpd_i.c"
 #include "httpd.h"
 #include "fsresolver.h"
+#include "response.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -212,6 +213,12 @@ Sites::Add(BSTR name, ISite **site)
 
 //////////////////////////////////////////////////////////////////////////
 
+void 
+Response::Init(http_response* response)
+{
+  m_response = response;
+}
+
 HRESULT STDMETHODCALLTYPE 
 Response::GetHeader(BSTR name, BSTR *value)
 {
@@ -233,23 +240,28 @@ Response::SendHeaders()
 HRESULT STDMETHODCALLTYPE 
 Response::get_Buffer(VARIANT_BOOL *result)
 {
+  *result = m_response->buffered() ? 
+       VARIANT_TRUE : VARIANT_FALSE;
   return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE 
 Response::put_Buffer(VARIANT_BOOL value)
 {
+  m_response->set_buffered(value != VARIANT_FALSE);
   return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE 
 Response::Flush()
 {
+  m_response->flush();
   return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE 
 Response::Send(void *data, int length)
 {
+  m_response->send((char*)data, length);
   return S_OK;
 }

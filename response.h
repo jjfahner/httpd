@@ -109,6 +109,12 @@ public:
   void set_status(String const&);
 
   //
+  // Buffering
+  //
+  bool buffered() const;
+  void set_buffered(bool buffered);
+
+  //
   // Headers
   //
   header_map headers;
@@ -174,21 +180,43 @@ private:
   connection&     m_con;
   http_versions   m_ver;
   String          m_status;
+  bool            m_buffered;
   buffer          m_buffer;
   response_states m_state;
   DWORD           m_start;
 };
 
 //
+// Inline operations
+//
+inline bool 
+http_response::buffered() const
+{
+  return m_buffered;
+}
+
+inline void 
+http_response::set_buffered(bool buffered)
+{
+  m_buffered = buffered;
+  if(!buffered)
+  {
+    flush();
+  }
+}
+
+//
 // Operators for writing data
 //
-inline http_response& operator << (http_response& os, String const& s)
+inline http_response& 
+operator << (http_response& os, String const& s)
 {
   os.send(s.c_str(), s.length());
   return os;
 }
 
-inline http_response& operator << (http_response& os, char const* s)
+inline http_response& 
+operator << (http_response& os, char const* s)
 {
   os.send(s, 0);
   return os;
