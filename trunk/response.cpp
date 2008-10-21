@@ -208,19 +208,35 @@ http_response::send(char const* data, int size)
   }
   else
   {
-    char buf[6000];
-    char* ptr = buf;
-    
-    sprintf_s(buf, "%x\r\n", size);
-    ptr += strlen(buf);
+    // Setup buffer
+    static const size_t bufsize = 4096;
+    static const size_t buffree = bufsize - 8;
+    char buf[bufsize];
 
-    memcpy(ptr, data, size);
-    ptr += size;
+    // Send data
+    while(size)
+    {
+      // Determine next chunk
+      size_t copy = size < buffree ? size : buffree;
+      size -= copy;
 
-    memcpy(ptr, "\r\n", 2);
-    ptr += 2;
+      char* ptr = buf;
 
-    m_con.send(buf, ptr - buf);
+      // Write chunk header
+      sprintf_s(buf, "%x\r\n", copy);
+      ptr += strlen(buf);
+
+      // Write chunk data
+      memcpy(ptr, data, copy);
+      ptr += copy;
+
+      // Write chunk trailer
+      memcpy(ptr, "\r\n", 2);
+      ptr += 2;
+
+      // Send chunk
+      m_con.send(buf, ptr - buf);
+    }
   }
 }
 
