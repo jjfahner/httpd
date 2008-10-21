@@ -20,7 +20,71 @@ enum http_versions
   httpver_1_1 = 1
 };
 
-#define RESPONSE_BUFSIZE (4096)
+
+template <int blocksize_t = 1024>
+class buffer_t
+{
+public:
+
+  enum { blocksize = blocksize_t };
+
+  struct block
+  {
+    block() : m_size (0) {}
+    char   m_data[blocksize];
+    size_t m_size;
+  };
+
+  typedef std::list<block> BlockList;
+
+public:
+
+  size_t size() const
+  {
+    return m_list.size() == 0 ? 0 : 
+      (m_list.size() - 1 * blocksize) + m_list.back().m_size;
+  }
+
+  void append(char const* data, size_t size)
+  {
+    while(size)
+    {
+      // Ensure there's a block with available space
+      if(m_list.size() == 0 || 
+         m_list.back().m_size == blocksize)
+      {
+        m_list.push_back(block());
+      }
+
+      // Determine copy size
+      size_t copy = blocksize - m_list.back().m_size;
+      if(size < copy) copy = size;
+
+      // Copy data into block
+      memcpy(m_list.back().m_data, data, copy);
+      m_list.back().m_size += copy;
+
+      // Adjust sizes
+      size -= copy;
+      data += copy;
+    }
+  }
+
+  block const* get_block() const
+  {
+    return m_list.size() ? &m_list.front() : 0;
+  }
+
+  void forget_block()
+  {
+    m_list.pop_front();
+  }
+
+private:
+
+  BlockList m_list;
+
+};
 
 class http_response 
 {
@@ -88,6 +152,11 @@ public:
 private:
 
   //
+  // Flush implementation
+  //
+  void impl_flush(bool final);
+
+  //
   // Create error document
   //
   void create_error_doc(String& msg);
@@ -96,6 +165,8 @@ private:
   // Implementation
   //
   void impl_send_headers();
+  
+  typedef buffer_t<> buffer;
 
   //
   // Member data
@@ -103,8 +174,7 @@ private:
   connection&     m_con;
   http_versions   m_ver;
   String          m_status;
-  char            m_buffer[RESPONSE_BUFSIZE];
-  char*           m_bufptr;
+  buffer          m_buffer;
   response_states m_state;
   DWORD           m_start;
 };
