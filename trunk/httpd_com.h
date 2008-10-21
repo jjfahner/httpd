@@ -10,6 +10,7 @@
 extern CComModule _Module;
 
 class http_site;
+class http_response;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -184,6 +185,11 @@ class ATL_NO_VTABLE Response :
 public:
 
   //
+  // Initialize response
+  //
+  void Init(http_response* response);
+
+  //
   // Implement IResponse
   //
   virtual HRESULT STDMETHODCALLTYPE GetHeader(BSTR name, BSTR *value);
@@ -215,6 +221,13 @@ public:
     REGMAP_UUID ("LIBID",       LIBID_HTTPD)
     REGMAP_ENTRY("THREADING",   "Apartment")
   END_REGISTRY_MAP()
+
+private:
+
+  //
+  // Members
+  //
+  http_response* m_response;
 
 };
 
