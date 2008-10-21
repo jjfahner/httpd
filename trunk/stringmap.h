@@ -81,6 +81,9 @@ public:
   const_index_proxy(this_type const& map, key_type const& key);
   const_index_proxy(const_index_proxy const& rhs);
 
+  // Key
+  key_type const& key() const;
+
   // Explicit type conversions
   value_type const& as_str() const;
   int as_int() const;
@@ -245,6 +248,12 @@ inline stringmap::const_index_proxy::const_index_proxy(
 m_map (rhs.m_map),
 m_key (rhs.m_key)
 {
+}
+
+inline stringmap::key_type const& 
+stringmap::const_index_proxy::key() const
+{
+  return m_key;
 }
 
 inline stringmap::value_type const& 

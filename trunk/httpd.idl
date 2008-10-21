@@ -181,7 +181,7 @@ library HTTPD
     uuid(0D7284F1-8971-47f5-A1B3-CC9F6D5BE890),
     helpstring("Response header item")
   ]
-  interface IResponseHeader
+  interface IResponseHeader : IDispatch
   {
     //
     // Header name
@@ -198,35 +198,10 @@ library HTTPD
     HRESULT Value([in] BSTR value);
   }
 
-  //
-  // Response header class
-  //
-  [
-		uuid(0D7284F1-8971-47f5-A1B3-CC9F6D5BE891),
-		helpstring("ResponseHeader class")
-	]
-	coclass ResponseHeader
-	{
-		[default] interface IResponseHeader;
-	};
-
   //////////////////////////////////////////////////////////////////////////
   //
   // Response headers collection
   //
-
-  //
-  // Enumerator class
-  //
-  [
-		uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2B7),
-		hidden,
-		helpstring("ResponseHeadersVARIANT Class")
-	]
-	coclass ResponseHeadersVARIANT
-	{
-		[default] interface IEnumVARIANT;
-	};
 
   //
   // Interface
@@ -241,23 +216,24 @@ library HTTPD
     HRESULT _NewEnum([out, retval] IUnknown** ppUnk);
 
     [helpstring("Retrieve a header"), id(DISPID_VALUE), propget]
-    HRESULT Item([in] VARIANT index, [out, retval] IResponseHeader** pSite);
+    HRESULT Item([in] VARIANT index, [out, retval] IResponseHeader** pHeader);
 
     [helpstring("Retrieve the number of headers"), propget]
     HRESULT Count([out, retval] long* pVal);
   }
 
   //
-  // Coclass
+  // Enumerator class
   //
   [
-    uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2B9),
-    version(1.0)
-  ]
-  coclass ResponseHeaders
-  {
-    dispinterface IResponseHeaders;
-  }
+		uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2B7),
+		hidden,
+		helpstring("ResponseHeadersVARIANT Class")
+	]
+	coclass ResponseHeadersVARIANT
+	{
+		interface IEnumVARIANT;
+	};
 
   //////////////////////////////////////////////////////////////////////////
   //

@@ -3,6 +3,100 @@
 #include "httpd.h"
 #include "response.h"
 
+//////////////////////////////////////////////////////////////////////////
+
+/*static*/ HRESULT 
+ResponseHeader::Create(http_response* response, 
+                       String const& key, 
+                       IDispatch** pDisp)
+{
+  // Clear result value
+  *pDisp = 0;
+
+  // Create instance of Site class
+  CComObject<ResponseHeader>* pObject;
+  if(FAILED(pObject->CreateInstance(&pObject)))
+  {
+    delete pObject;
+    return E_UNEXPECTED;
+  }
+
+  // Set header proxy
+  pObject->m_response = response;
+  pObject->m_key = key;
+
+  // Query for IDispatch
+  return pObject->QueryInterface(IID_IDispatch, (void**)pDisp);
+}
+
+HRESULT STDMETHODCALLTYPE 
+ResponseHeader::get_Name(BSTR *name)
+{
+  *name = m_key.AllocSysString();
+  return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE 
+ResponseHeader::get_Value(BSTR *value)
+{
+  *value = m_response->headers[m_key].as_str().AllocSysString();
+  return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE 
+ResponseHeader::put_Value(BSTR value)
+{
+  m_response->headers[m_key] = String(value);
+  return S_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+/*static*/ HRESULT 
+ResponseHeaders::Create(http_response* response, IDispatch** pDisp)
+{
+  // Clear result value
+  *pDisp = 0;
+
+  // Create instance of Site class
+  CComObject<ResponseHeaders>* pObject;
+  if(FAILED(pObject->CreateInstance(&pObject)))
+  {
+    delete pObject;
+    return E_UNEXPECTED;
+  }
+
+  // Set header proxy
+  pObject->m_response = response;
+
+  // Query for IDispatch
+  return pObject->QueryInterface(IID_IDispatch, (void**)pDisp);
+}
+
+HRESULT STDMETHODCALLTYPE 
+ResponseHeaders::get__NewEnum(IUnknown **ppUnk)
+{
+  *ppUnk = 0;
+  return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE 
+ResponseHeaders::get_Item(VARIANT index, IResponseHeader **pSite)
+{
+  if(index.vt == VT_BSTR)
+  {
+    return ResponseHeader::Create(m_response, 
+          index.bstrVal, (IDispatch**)pSite);
+  }
+  return E_INVALIDARG;
+}
+
+HRESULT STDMETHODCALLTYPE 
+ResponseHeaders::get_Count(long *pVal)
+{
+  *pVal = m_response->headers.size();
+  return S_OK;
+}
 
 //////////////////////////////////////////////////////////////////////////
 
