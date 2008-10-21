@@ -1,6 +1,6 @@
 #include "precomp.h"
-#include "httpd_com.h"
-#include "response_com.h"
+#include "com_httpd.h"
+#include "com_response.h"
 #include "httpd_i.c"
 
 //////////////////////////////////////////////////////////////////////////

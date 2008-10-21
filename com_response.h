@@ -12,6 +12,84 @@ extern CComModule _Module;
 
 //////////////////////////////////////////////////////////////////////////
 
+class ATL_NO_VTABLE ResponseHeader : 
+  public CComObjectRootEx<CComMultiThreadModel>,
+  public IDispatchImpl<IResponseHeader, &IID_IResponseHeader, 
+                       &CAtlModule::m_libid, 0xFFFF, 0xFFFF>
+{
+public:
+  
+  //
+  // Create instance
+  //
+  static HRESULT Create(http_response* response, 
+          String const& key, IDispatch** pDisp);
+
+  //
+  // Implement IResponseHeader
+  //
+  HRESULT STDMETHODCALLTYPE get_Name(BSTR *name);
+  HRESULT STDMETHODCALLTYPE get_Value(BSTR *value);
+  HRESULT STDMETHODCALLTYPE put_Value(BSTR value);
+
+  //
+  // COM Interface map
+  //
+  BEGIN_COM_MAP(ResponseHeader)
+    COM_INTERFACE_ENTRY(IDispatch)
+    COM_INTERFACE_ENTRY(IResponseHeader)
+  END_COM_MAP()
+
+private:
+
+  //
+  // Members
+  //
+  http_response* m_response;
+  String m_key;
+
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+class ATL_NO_VTABLE ResponseHeaders : 
+  public CComObjectRootEx<CComMultiThreadModel>,
+  public IDispatchImpl<IResponseHeaders, &IID_IResponseHeaders, 
+  &CAtlModule::m_libid, 0xFFFF, 0xFFFF>
+{
+public:
+
+  //
+  // Create instance
+  //
+  static HRESULT Create(http_response* response, IDispatch** pDisp);
+
+  //
+  // Implement IResponseHeaders
+  //
+  HRESULT STDMETHODCALLTYPE get__NewEnum(IUnknown **ppUnk);
+  HRESULT STDMETHODCALLTYPE get_Item(VARIANT index, IResponseHeader **pHeader);
+  HRESULT STDMETHODCALLTYPE get_Count(long *pVal);
+
+  //
+  // COM Interface map
+  //
+  BEGIN_COM_MAP(ResponseHeaders)
+    COM_INTERFACE_ENTRY(IDispatch)
+    COM_INTERFACE_ENTRY(IResponseHeaders)
+  END_COM_MAP()
+
+private:
+
+  //
+  // Members
+  //
+  http_response* m_response;
+
+};
+
+//////////////////////////////////////////////////////////////////////////
+
 class ATL_NO_VTABLE Response : 
   public CComObjectRootEx<CComMultiThreadModel>,
   public IDispatchImpl<IResponse, &IID_IResponse, &CAtlModule::m_libid, 0xFFFF, 0xFFFF>,
