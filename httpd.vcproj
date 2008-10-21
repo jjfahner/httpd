@@ -173,16 +173,12 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Source Files"
+			Name="Misc"
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\connection.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\encoding.cpp"
+				RelativePath=".\any.h"
 				>
 			</File>
 			<File
@@ -190,19 +186,75 @@
 				>
 			</File>
 			<File
-				RelativePath=".\fshandler.cpp"
+				RelativePath=".\main.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\fsresolver.cpp"
+				RelativePath=".\misc.h"
 				>
 			</File>
 			<File
-				RelativePath=".\handler.cpp"
+				RelativePath=".\precomp.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\precomp.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Res"
+			>
+			<File
+				RelativePath=".\httpd.rc"
 				>
 			</File>
 			<File
-				RelativePath=".\httpd.cpp"
+				RelativePath=".\httpd.tlb"
+				>
+			</File>
+			<File
+				RelativePath=".\objects.rgs"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Tests"
+			>
+			<File
+				RelativePath=".\tests\server.js"
+				>
+			</File>
+			<File
+				RelativePath=".\tests\server.vbs"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="COM"
+			>
+			<File
+				RelativePath=".\com_httpd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\com_response.cpp"
 				>
 			</File>
 			<File
@@ -225,8 +277,44 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<Filter
+				Name="Headers"
+				>
+				<File
+					RelativePath=".\com_httpd.h"
+					>
+				</File>
+				<File
+					RelativePath=".\com_response.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Core"
+			>
 			<File
-				RelativePath=".\httpd_com.cpp"
+				RelativePath=".\connection.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\encoding.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\fshandler.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\fsresolver.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\handler.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\httpd.cpp"
 				>
 			</File>
 			<File
@@ -236,30 +324,6 @@
 			<File
 				RelativePath=".\listener.cpp"
 				>
-			</File>
-			<File
-				RelativePath=".\main.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\precomp.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\request.cpp"
@@ -289,152 +353,106 @@
 				RelativePath=".\uri.cpp"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
-			>
-			<File
-				RelativePath=".\any.h"
+			<Filter
+				Name="Headers"
 				>
-			</File>
-			<File
-				RelativePath=".\class_state.h"
-				>
-			</File>
-			<File
-				RelativePath=".\connection.h"
-				>
-			</File>
-			<File
-				RelativePath=".\context.h"
-				>
-			</File>
-			<File
-				RelativePath=".\encoding.h"
-				>
-			</File>
-			<File
-				RelativePath=".\extmap.h"
-				>
-			</File>
-			<File
-				RelativePath=".\fshandler.h"
-				>
-			</File>
-			<File
-				RelativePath=".\fsresolver.h"
-				>
-			</File>
-			<File
-				RelativePath=".\handler.h"
-				>
-			</File>
-			<File
-				RelativePath=".\header_map.h"
-				>
-			</File>
-			<File
-				RelativePath=".\httpd.h"
-				>
-			</File>
-			<File
-				RelativePath=".\httpd_com.h"
-				>
-			</File>
-			<File
-				RelativePath=".\httpdate.h"
-				>
-			</File>
-			<File
-				RelativePath=".\listener.h"
-				>
-			</File>
-			<File
-				RelativePath=".\misc.h"
-				>
-			</File>
-			<File
-				RelativePath=".\precomp.h"
-				>
-			</File>
-			<File
-				RelativePath=".\request.h"
-				>
-			</File>
-			<File
-				RelativePath=".\resolver.h"
-				>
-			</File>
-			<File
-				RelativePath=".\resource.h"
-				>
-			</File>
-			<File
-				RelativePath=".\response.h"
-				>
-			</File>
-			<File
-				RelativePath=".\site.h"
-				>
-			</File>
-			<File
-				RelativePath=".\socket.h"
-				>
-			</File>
-			<File
-				RelativePath=".\string.h"
-				>
-			</File>
-			<File
-				RelativePath=".\stringmap.h"
-				>
-			</File>
-			<File
-				RelativePath=".\sync.h"
-				>
-			</File>
-			<File
-				RelativePath=".\thread.h"
-				>
-			</File>
-			<File
-				RelativePath=".\threadpool.h"
-				>
-			</File>
-			<File
-				RelativePath=".\uri.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Resource Files"
-			>
-			<File
-				RelativePath=".\httpd.rc"
-				>
-			</File>
-			<File
-				RelativePath=".\httpd.tlb"
-				>
-			</File>
-			<File
-				RelativePath=".\objects.rgs"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Tests"
-			>
-			<File
-				RelativePath=".\tests\server.js"
-				>
-			</File>
-			<File
-				RelativePath=".\tests\server.vbs"
-				>
-			</File>
+				<File
+					RelativePath=".\class_state.h"
+					>
+				</File>
+				<File
+					RelativePath=".\connection.h"
+					>
+				</File>
+				<File
+					RelativePath=".\context.h"
+					>
+				</File>
+				<File
+					RelativePath=".\encoding.h"
+					>
+				</File>
+				<File
+					RelativePath=".\extmap.h"
+					>
+				</File>
+				<File
+					RelativePath=".\fshandler.h"
+					>
+				</File>
+				<File
+					RelativePath=".\fsresolver.h"
+					>
+				</File>
+				<File
+					RelativePath=".\handler.h"
+					>
+				</File>
+				<File
+					RelativePath=".\header_map.h"
+					>
+				</File>
+				<File
+					RelativePath=".\httpd.h"
+					>
+				</File>
+				<File
+					RelativePath=".\httpdate.h"
+					>
+				</File>
+				<File
+					RelativePath=".\listener.h"
+					>
+				</File>
+				<File
+					RelativePath=".\request.h"
+					>
+				</File>
+				<File
+					RelativePath=".\resolver.h"
+					>
+				</File>
+				<File
+					RelativePath=".\resource.h"
+					>
+				</File>
+				<File
+					RelativePath=".\response.h"
+					>
+				</File>
+				<File
+					RelativePath=".\site.h"
+					>
+				</File>
+				<File
+					RelativePath=".\socket.h"
+					>
+				</File>
+				<File
+					RelativePath=".\string.h"
+					>
+				</File>
+				<File
+					RelativePath=".\stringmap.h"
+					>
+				</File>
+				<File
+					RelativePath=".\sync.h"
+					>
+				</File>
+				<File
+					RelativePath=".\thread.h"
+					>
+				</File>
+				<File
+					RelativePath=".\threadpool.h"
+					>
+				</File>
+				<File
+					RelativePath=".\uri.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

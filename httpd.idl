@@ -172,6 +172,93 @@ library HTTPD
     dispinterface IRequest;
   }
 
+  
+  //////////////////////////////////////////////////////////////////////////
+  //
+  // Response header
+  //
+  [
+    uuid(0D7284F1-8971-47f5-A1B3-CC9F6D5BE890),
+    helpstring("Response header item")
+  ]
+  interface IResponseHeader
+  {
+    //
+    // Header name
+    //
+    [helpstring("Retrieve header name"), propget]
+    HRESULT Name([out, retval] BSTR* name);
+
+    //
+    // Header value
+    //
+    [helpstring("Retrieve header value"), propget, id(DISPID_VALUE)]
+    HRESULT Value([out, retval] BSTR* value);
+    [helpstring("Set header value"), propput, id(DISPID_VALUE)]
+    HRESULT Value([in] BSTR value);
+  }
+
+  //
+  // Response header class
+  //
+  [
+		uuid(0D7284F1-8971-47f5-A1B3-CC9F6D5BE891),
+		helpstring("ResponseHeader class")
+	]
+	coclass ResponseHeader
+	{
+		[default] interface IResponseHeader;
+	};
+
+  //////////////////////////////////////////////////////////////////////////
+  //
+  // Response headers collection
+  //
+
+  //
+  // Enumerator class
+  //
+  [
+		uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2B7),
+		hidden,
+		helpstring("ResponseHeadersVARIANT Class")
+	]
+	coclass ResponseHeadersVARIANT
+	{
+		[default] interface IEnumVARIANT;
+	};
+
+  //
+  // Interface
+  //
+  [
+    uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2B8),
+    version(1.0), dual, oleautomation
+  ]
+  interface IResponseHeaders : IDispatch
+  {
+    [helpstring("Retrieve the enumerator"), id(DISPID_NEWENUM), propget]
+    HRESULT _NewEnum([out, retval] IUnknown** ppUnk);
+
+    [helpstring("Retrieve a header"), id(DISPID_VALUE), propget]
+    HRESULT Item([in] VARIANT index, [out, retval] IResponseHeader** pSite);
+
+    [helpstring("Retrieve the number of headers"), propget]
+    HRESULT Count([out, retval] long* pVal);
+  }
+
+  //
+  // Coclass
+  //
+  [
+    uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2B9),
+    version(1.0)
+  ]
+  coclass ResponseHeaders
+  {
+    dispinterface IResponseHeaders;
+  }
+
   //////////////////////////////////////////////////////////////////////////
   //
   // IResponse interface
