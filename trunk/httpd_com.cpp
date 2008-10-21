@@ -288,20 +288,55 @@ Response::Init(http_response* response)
 }
 
 HRESULT STDMETHODCALLTYPE 
+Response::get_Version(HttpVersion *version)
+{
+  if(m_response->version() == httpver_1_0)
+  {
+    *version = HTTP_1_0;
+  }
+  else if(m_response->version() == httpver_1_1)
+  {
+    *version = HTTP_1_1;
+  }
+  else
+  {
+    return E_UNEXPECTED;
+  }
+  return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE 
+Response::get_Status(BSTR *status)
+{
+  *status = m_response->status().AllocSysString();
+  return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE 
+Response::put_Status(BSTR status)
+{
+  m_response->set_status(status);
+  return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE 
 Response::GetHeader(BSTR name, BSTR *value)
 {
+  *value = m_response->headers[name].as_str().AllocSysString();
   return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE 
 Response::SetHeader(BSTR name, BSTR value)
 {
+  m_response->headers[name] = String(value);
   return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE 
 Response::SendHeaders()
 {
+  m_response->send_headers();
   return S_OK;
 }
 
@@ -321,9 +356,18 @@ Response::put_Buffer(VARIANT_BOOL value)
 }
 
 HRESULT STDMETHODCALLTYPE 
-Response::Flush()
+Response::SendHeaders(VARIANT_BOOL *result)
 {
-  m_response->flush();
+  m_response->send_headers();
+  *result = VARIANT_TRUE;
+  return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE 
+Response::SendError(int error, VARIANT_BOOL *result)
+{
+  m_response->send_error(error);
+  *result = VARIANT_TRUE;
   return S_OK;
 }
 
@@ -331,5 +375,19 @@ HRESULT STDMETHODCALLTYPE
 Response::Send(void *data, int length)
 {
   m_response->send((char*)data, length);
+  return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE 
+Response::Flush()
+{
+  m_response->flush();
+  return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE 
+Response::Finish()
+{
+  m_response->finish();
   return S_OK;
 }

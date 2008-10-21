@@ -21,6 +21,17 @@ library HTTPD
 
   //////////////////////////////////////////////////////////////////////////
   //
+  // Enumerations
+  //
+  typedef enum 
+  {
+    HTTP_1_0 = 10,
+    HTTP_1_1 = 11
+  } 
+  HttpVersion;
+
+  //////////////////////////////////////////////////////////////////////////
+  //
   // IServer interface
   //
   [
@@ -171,26 +182,65 @@ library HTTPD
   ]
   interface IResponse : IDispatch
   {
-    [helpstring("Retrieve a response header")]
-    HRESULT GetHeader([in] BSTR name, [out, retval] BSTR* value);
+    //
+    // Version
+    //
+    [helpstring("Retrieve HTTP version"), propget]
+    HRESULT Version([out, retval] HttpVersion* version);
 
-    [helpstring("Set a response header")]
-    HRESULT SetHeader([in] BSTR name, [in] BSTR value);
+    //
+    // Status
+    //
+    [helpstring("Status"), propget]
+    HRESULT Status([out, retval] BSTR* status);
+    [helpstring("Status"), propput]
+    HRESULT Status([in] BSTR status);
 
-    [helpstring("Send response headers")]
-    HRESULT SendHeaders();
-
+    //
+    // Response buffering
+    //
     [helpstring("Get buffering state"), propget]
     HRESULT Buffer([out, retval] VARIANT_BOOL* result);
-    
     [helpstring("Set buffering state"), propput]
     HRESULT Buffer([in] VARIANT_BOOL value);
 
+    //
+    // Response headers
+    //
+    [helpstring("Retrieve a response header")]
+    HRESULT GetHeader([in] BSTR name, [out, retval] BSTR* value);
+    [helpstring("Set a response header")]
+    HRESULT SetHeader([in] BSTR name, [in] BSTR value);
+
+    //
+    // Send response headers
+    //
+    [helpstring("Send response headers. Fails when headers have already been sent.")]
+    HRESULT SendHeaders([out, retval] VARIANT_BOOL* result);
+
+    //
+    // Send error
+    //
+    [helpstring("Send error response. Fails when headers have already been sent.")]
+    HRESULT SendError([in] int error, [out, retval] VARIANT_BOOL* result);
+
+    //
+    // Send response data
+    //
+    [helpstring("Send response data")]
+    HRESULT Send([in] void* data, [in] int length);
+
+    //
+    // Flush headers and available data
+    //
     [helpstring("Flush output buffer")]
     HRESULT Flush();
 
-    [helpstring("Send response data")]
-    HRESULT Send([in] void* data, [in] int length);
+    //
+    // Finish the request
+    //
+    [helpstring("Finish the request")]
+    HRESULT Finish();
   }
 
   //
