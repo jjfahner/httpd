@@ -143,6 +143,7 @@ connection::handle_request()
     try
     {
       site->handle_request(context);
+      response.finish();
     }
     catch(std::exception const& e)
     {

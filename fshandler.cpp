@@ -3,6 +3,25 @@
 #include "context.h"
 #include "httpdate.h"
 
+struct AutoHandle
+{
+  HANDLE m_handle;
+  AutoHandle(HANDLE handle = INVALID_HANDLE_VALUE) : m_handle (handle)
+  {
+  }
+  ~AutoHandle()
+  {
+    if(m_handle != INVALID_HANDLE_VALUE)
+    {
+      CloseHandle(m_handle);
+    }
+  }
+  operator HANDLE () const
+  {
+    return m_handle;
+  }
+};
+
 filesystem_handler::filesystem_handler(String const& path, WIN32_FIND_DATA const& wfd) :
 m_path  (path)
 {
@@ -23,22 +42,28 @@ filesystem_handler::handle(http_context& context)
 bool 
 filesystem_handler::handler(http_context& context)
 {
-  try
-  {
-    bool res = handler_impl(context);
-    delete this;
-    return res;
+  bool res = false;
+  try {
+    res = handler_impl(context);
   }
-  catch(...)
-  {
-    delete this;
-    return false;
+  catch(...) {
   }
+
+  delete this;
+  
+  return res;
 }
 
 bool 
 filesystem_handler::handler_impl(http_context& context)
 {
+  // Check for large files
+  if(m_wfd.nFileSizeHigh > 0)
+  {
+    context.response.send_error(500);
+    return true;
+  }
+
   // Set content-location
   if(context.request.headers["HTTP_URI"] != context.resolved_uri)
   {
@@ -49,12 +74,15 @@ filesystem_handler::handler_impl(http_context& context)
   httpdate omd(m_wfd.ftLastWriteTime);
 
   // Handle If-Modified-Since
-  httpdate imd;
-  if(imd.set(context.request.headers["If-Modified-Since"]) && imd == omd)
+  if(context.request.headers.contains("If-Modified-Since"))
   {
-    // Not modified
-    context.response.send_not_modified();
-    return true;
+    httpdate imd;
+    if(imd.set(context.request.headers["If-Modified-Since"]) && imd == omd)
+    {
+      // Not modified
+      context.response.send_not_modified();
+      return true;
+    }
   }
 
   // Set last modified date
@@ -69,7 +97,7 @@ filesystem_handler::handler_impl(http_context& context)
   context.response.headers["Cache-Control"] = "public";
 
   // Open file
-  HANDLE hFile = ::CreateFile(m_path.c_str(), GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, 0, 0);
+  AutoHandle hFile(::CreateFile(m_path.c_str(), GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, 0, 0));
   if(hFile == INVALID_HANDLE_VALUE)
   {
     int error;
@@ -80,42 +108,35 @@ filesystem_handler::handler_impl(http_context& context)
     default:                    error = 500; break;
     }
     context.response.send_error(error);
-    return false;
+    return true;
   }
 
   // Determine file size
-  DWORD size = GetFileSize(hFile, 0);
+  DWORD size = m_wfd.nFileSizeLow;
+
+  static const size_t bufsize = 1024;
 
   // Write file in chunks
-  char  buff[4096];
-  DWORD read, done, sent = 0;
+  char  buff[bufsize];
+  DWORD read, done;
   while(size)
   {
     // Determine read size
-    read  = size < 4096 ? size : 4096;
+    read  = size < bufsize ? size : bufsize;
     size -= read;
 
     // Read chunk
     if(!ReadFile(hFile, buff, read, &done, 0) || read != done)
     {
-      // TODO handle read error correctly (if at all possible)
-      CloseHandle(hFile);
-      return false;
+      context.response.send_error(500);
+      return true;
     }
 
     // Write chunk
     context.response.send(buff, read);
-
-    // Update sent data
-    sent += read;
   }
 
   // Close http_response
   context.response.finish();
-
-  // Close the file
-  CloseHandle(hFile);
-
-  // Succeeded
   return true;
 }
