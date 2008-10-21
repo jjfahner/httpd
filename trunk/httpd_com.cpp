@@ -7,38 +7,6 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-//
-// Create a Site instance for a http_site
-//
-
-HRESULT CreateSite(http_site* forSite, ISite** pSite)
-{
-  // Clear result value
-  *pSite = 0;
-
-  // Create instance of Site class
-  CComObject<Site>* pObject;
-  if(FAILED(pObject->CreateInstance(&pObject)))
-  {
-    return E_UNEXPECTED;
-  }
-
-  // Retrieve site interface
-  if(FAILED(pObject->QueryInterface(IID_ISite, (void**)pSite)))
-  {
-    return E_NOINTERFACE;
-  }
-
-  // Set reference to site
-  pObject->Init(forSite);
-
-  // Done
-  return S_OK;
-}
-
-
-//////////////////////////////////////////////////////////////////////////
-
 HRESULT STDMETHODCALLTYPE 
 Server::get_Logfile(BSTR *filename)
 {
@@ -89,10 +57,25 @@ Server::Stop()
 
 //////////////////////////////////////////////////////////////////////////
 
-void 
-Site::Init(http_site* site)
+/*static */HRESULT 
+Site::Create(http_site* site, IDispatch** pDisp)
 {
-  m_site = site;
+  // Clear result value
+  *pDisp = 0;
+
+  // Create instance of Site class
+  CComObject<Site>* pObject;
+  if(FAILED(pObject->CreateInstance(&pObject)))
+  {
+    delete pObject;
+    return E_UNEXPECTED;
+  }
+
+  // Set site
+  pObject->m_site = site;
+
+  // Query for IDispatch
+  return pObject->QueryInterface(IID_IDispatch, (void**)pDisp);
 }
 
 HRESULT STDMETHODCALLTYPE 
@@ -153,8 +136,11 @@ Site::AddDefaultDocument(BSTR document)
 HRESULT STDMETHODCALLTYPE 
 Sites::get__NewEnum(IUnknown **ppUnk)
 {
-  *ppUnk = 0;
-  return E_FAIL;
+  return SitesVARIANT::Create(
+    httpd.site_begin(), 
+    httpd.site_begin(), 
+    httpd.site_end(), 
+    ppUnk);
 }
 
 HRESULT STDMETHODCALLTYPE 
@@ -163,10 +149,18 @@ Sites::get_Item(VARIANT index, ISite **site)
   *site = 0;
   http_site* p = 0;
 
+  // Check for byref
+  VARTYPE vt = index.vt;
+  bool byref = (vt & VT_BYREF) == VT_BYREF;
+  if(byref) vt &= ~VT_BYREF;
+
   // Find site for index
-  if(index.vt == VT_INT || index.vt == VT_I4)
+  if(vt == VT_INT || vt == VT_I4)
   {
-    if(index.intVal < (int)httpd.sites().size())
+    size_t idx = 0;
+    idx = byref ? *index.pintVal : index.intVal;
+    
+    if(idx < (int)httpd.sites().size())
     {
       http_daemon::site_iterator it;
       it = httpd.site_begin();
@@ -174,9 +168,9 @@ Sites::get_Item(VARIANT index, ISite **site)
       p = it->second;
     }
   }
-  else if(index.vt == VT_BSTR)
+  else if(vt == VT_BSTR)
   {
-    p = httpd.get_site(index.bstrVal);
+    p = httpd.get_site(byref ? *index.pbstrVal : index.bstrVal);
   }
   
   // No site found
@@ -186,7 +180,7 @@ Sites::get_Item(VARIANT index, ISite **site)
   }
 
   // Create the site instance
-  return CreateSite(p, site);
+  return Site::Create(p, (IDispatch**)site);
 }
 
 HRESULT STDMETHODCALLTYPE 
@@ -208,7 +202,81 @@ Sites::Add(BSTR name, ISite **site)
   }
 
   // Create the site instance
-  return CreateSite(p, site);
+  return Site::Create(p, (IDispatch**)site);
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+/*static*/ HRESULT
+SitesVARIANT::Create(iter ii, iter it, iter ie, IUnknown** ppUnk)
+{
+  // Create instance of Site class
+  CComObject<SitesVARIANT>* pObject;
+  if(FAILED(pObject->CreateInstance(&pObject)))
+  {
+    return 0;
+  }
+
+  // Initialize instance
+  pObject->m_ii = ii;
+  pObject->m_it = it;
+  pObject->m_ie = ie;
+
+  // Query for interface
+  return pObject->QueryInterface(IID_IUnknown, (void**)ppUnk);
+}
+
+HRESULT STDMETHODCALLTYPE 
+SitesVARIANT::Next(ULONG celt, VARIANT* rgVar, ULONG * pCeltFetched)
+{
+  while(celt && m_it != m_ie)
+  {
+    // Create site
+    IDispatch* pDisp = 0;
+    if(FAILED(Site::Create(m_it->second, &pDisp)))
+    {
+      break;
+    }
+
+    // Set type
+    rgVar->vt = VT_DISPATCH;
+    rgVar->pdispVal = pDisp;
+
+    // If given, update count
+    if(pCeltFetched)
+    {
+      ++*pCeltFetched;
+    }
+
+    // Next item
+    ++m_it;
+    ++rgVar;
+    --celt;
+  }
+  return celt == 0 ? S_OK : S_FALSE;
+}
+
+HRESULT STDMETHODCALLTYPE 
+SitesVARIANT::Skip(ULONG celt)
+{
+  while(celt && m_it != m_ie)
+  {
+    ++m_it;
+  }
+  return celt ? E_FAIL : S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE 
+SitesVARIANT::Reset()
+{
+  m_it = m_ii;
+  return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE 
+SitesVARIANT::Clone(IEnumVARIANT ** ppEnum)
+{
+  return SitesVARIANT::Create(m_ii, m_it, m_ie, (IUnknown**)ppEnum);
 }
 
 //////////////////////////////////////////////////////////////////////////
