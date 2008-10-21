@@ -25,9 +25,6 @@ m_start (GetTickCount())
   {
     headers["Server"] = server_string;
   }
-
-  // Point buffer pointer to start of buffer
-  m_bufptr = m_buffer;
 }
 
 http_response::~http_response()
@@ -180,19 +177,9 @@ void
 http_response::send(char const* data, int size)
 {
   // Check state
-  if(m_state == rs_initial)
-  {
-    send_headers();
-  }
   if(m_state == rs_finished)
   {
     throw std::exception("Invalid state");
-  }
-
-  // Headers must be sent prior to sending data
-  if(!headers.finalized())
-  {
-    send_headers();
   }
 
   // Determine size if unknown
@@ -201,68 +188,95 @@ http_response::send(char const* data, int size)
     size = strlen(data);
   }
 
-  // Send chunk
-  if(version() == httpver_1_0)
+  // Add to buffer
+  m_buffer.append(data, size);
+
+  // Flush when over limit
+  if(m_buffer.size() > 4096)
   {
-    m_con.send(data, size);
-  }
-  else
-  {
-    // Setup buffer
-    static const size_t bufsize = 4096;
-    static const size_t buffree = bufsize - 8;
-    char buf[bufsize];
-
-    // Send data
-    while(size)
-    {
-      // Determine next chunk
-      size_t copy = size < buffree ? size : buffree;
-      size -= copy;
-
-      char* ptr = buf;
-
-      // Write chunk header
-      sprintf_s(buf, "%x\r\n", copy);
-      ptr += strlen(buf);
-
-      // Write chunk data
-      memcpy(ptr, data, copy);
-      ptr += copy;
-
-      // Write chunk trailer
-      memcpy(ptr, "\r\n", 2);
-      ptr += 2;
-
-      // Send chunk
-      m_con.send(buf, ptr - buf);
-    }
+    flush();
   }
 }
 
 void 
 http_response::flush()
 {
+  impl_flush(false);
 }
 
 void 
-http_response::finish()
+http_response::impl_flush(bool final)
 {
-  // From initial state
+  // Request done
+  if(m_state == rs_finished)
+  {
+    return;
+  }
+
+  // Headers not sent
   if(m_state == rs_initial)
   {
     send_headers();
   }
 
-  // From headers sent
-  if(m_state == rs_headers)
+  // Handle regular data transfer
+  if(version() == httpver_1_0 || headers["Transfer-Encoding"] != "chunked")
   {
-    // Handle chunked encoding
-    if(headers["Transfer-Encoding"] == "chunked")
+    buffer::block const* block;
+    while(block = m_buffer.get_block())
     {
-      // Send last chunk
-      m_con.send("0\r\n\r\n");
+      m_con.send(block->m_data, block->m_size);
+      m_buffer.forget_block();
     }
+    return;
+  }
+  
+  // Setup buffer
+  static const size_t bufsize = buffer::blocksize + 8;
+  char buf[bufsize];
+
+  // Send blocks
+  buffer::block const* block;
+  while(block = m_buffer.get_block())
+  {
+    char* ptr = buf;
+
+    // Write chunk header
+    sprintf_s(buf, "%x\r\n", block->m_size);
+    ptr += strlen(buf);
+
+    // Write chunk data
+    memcpy(ptr, block->m_data, block->m_size);
+    ptr += block->m_size;
+
+    // Write chunk trailer
+    memcpy(ptr, "\r\n", 2);
+    ptr += 2;
+
+    // Send chunk
+    m_con.send(buf, ptr - buf);
+
+    // Next chunk
+    m_buffer.forget_block();
+  }
+
+  // Send final chunk
+  if(final)
+  {
+    m_con.send("0\r\n\r\n");
+  }
+}
+
+void 
+http_response::finish()
+{
+  // Flush output
+  try
+  {
+    impl_flush(true);
+  }
+  catch(...)
+  {
   }
 
   // Last state
