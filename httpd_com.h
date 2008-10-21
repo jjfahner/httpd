@@ -26,11 +26,11 @@ public:
   //
   // Implement IServer
   //
-  virtual HRESULT STDMETHODCALLTYPE get_Logfile(BSTR *filename);
-  virtual HRESULT STDMETHODCALLTYPE put_Logfile(BSTR filename);
-  virtual HRESULT STDMETHODCALLTYPE get_Sites(ISites** sites);
-  virtual HRESULT STDMETHODCALLTYPE Start();
-  virtual HRESULT STDMETHODCALLTYPE Stop();
+  HRESULT STDMETHODCALLTYPE get_Logfile(BSTR *filename);
+  HRESULT STDMETHODCALLTYPE put_Logfile(BSTR filename);
+  HRESULT STDMETHODCALLTYPE get_Sites(ISites** sites);
+  HRESULT STDMETHODCALLTYPE Start();
+  HRESULT STDMETHODCALLTYPE Stop();
 
   //
   // COM interface map
@@ -79,12 +79,12 @@ public:
   //
   // Implement ISite
   //
-  virtual HRESULT STDMETHODCALLTYPE get_Name(BSTR *name);
-  virtual HRESULT STDMETHODCALLTYPE get_Root(BSTR *root);
-  virtual HRESULT STDMETHODCALLTYPE put_Root(BSTR root);
-  virtual HRESULT STDMETHODCALLTYPE AddAlias(BSTR name, int port);
-  virtual HRESULT STDMETHODCALLTYPE AddMimeType(BSTR extension, BSTR mimetype, VARIANT handler);
-  virtual HRESULT STDMETHODCALLTYPE AddDefaultDocument(BSTR document);
+  HRESULT STDMETHODCALLTYPE get_Name(BSTR *name);
+  HRESULT STDMETHODCALLTYPE get_Root(BSTR *root);
+  HRESULT STDMETHODCALLTYPE put_Root(BSTR root);
+  HRESULT STDMETHODCALLTYPE AddAlias(BSTR name, int port);
+  HRESULT STDMETHODCALLTYPE AddMimeType(BSTR extension, BSTR mimetype, VARIANT handler);
+  HRESULT STDMETHODCALLTYPE AddDefaultDocument(BSTR document);
 
   //
   // COM interface map
@@ -130,10 +130,10 @@ public:
   //
   // Implement ISites
   //
-  virtual HRESULT STDMETHODCALLTYPE get__NewEnum(IUnknown **ppUnk);
-  virtual HRESULT STDMETHODCALLTYPE get_Item(VARIANT index, ISite **site);
-  virtual HRESULT STDMETHODCALLTYPE get_Count(long *pVal);
-  virtual HRESULT STDMETHODCALLTYPE Add(BSTR name, ISite **site);
+  HRESULT STDMETHODCALLTYPE get__NewEnum(IUnknown **ppUnk);
+  HRESULT STDMETHODCALLTYPE get_Item(VARIANT index, ISite **site);
+  HRESULT STDMETHODCALLTYPE get_Count(long *pVal);
+  HRESULT STDMETHODCALLTYPE Add(BSTR name, ISite **site);
 
   //
   // COM interface map
@@ -245,13 +245,19 @@ public:
   //
   // Implement IResponse
   //
-  virtual HRESULT STDMETHODCALLTYPE GetHeader(BSTR name, BSTR *value);
-  virtual HRESULT STDMETHODCALLTYPE SetHeader(BSTR name, BSTR value);
-  virtual HRESULT STDMETHODCALLTYPE SendHeaders();
-  virtual HRESULT STDMETHODCALLTYPE get_Buffer(VARIANT_BOOL *result);
-  virtual HRESULT STDMETHODCALLTYPE put_Buffer(VARIANT_BOOL value);
-  virtual HRESULT STDMETHODCALLTYPE Flush();
-  virtual HRESULT STDMETHODCALLTYPE Send(void *data, int length);
+  HRESULT STDMETHODCALLTYPE get_Version(HttpVersion *version);
+  HRESULT STDMETHODCALLTYPE get_Status(BSTR *status);
+  HRESULT STDMETHODCALLTYPE put_Status(BSTR status);
+  HRESULT STDMETHODCALLTYPE GetHeader(BSTR name, BSTR *value);
+  HRESULT STDMETHODCALLTYPE SetHeader(BSTR name, BSTR value);
+  HRESULT STDMETHODCALLTYPE SendHeaders();
+  HRESULT STDMETHODCALLTYPE get_Buffer(VARIANT_BOOL *result);
+  HRESULT STDMETHODCALLTYPE put_Buffer(VARIANT_BOOL value);
+  HRESULT STDMETHODCALLTYPE SendHeaders(VARIANT_BOOL *result);
+  HRESULT STDMETHODCALLTYPE SendError(int error, VARIANT_BOOL *result);
+  HRESULT STDMETHODCALLTYPE Send(void *data, int length);
+  HRESULT STDMETHODCALLTYPE Flush();
+  HRESULT STDMETHODCALLTYPE Finish();
   
   //
   // COM Interface map
