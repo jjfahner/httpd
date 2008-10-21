@@ -1,5 +1,7 @@
 #include "precomp.h"
 #include "httpd_com.h"
+#include "response_com.h"
+#include "httpd_i.c"
 
 //////////////////////////////////////////////////////////////////////////
 
