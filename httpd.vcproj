@@ -431,6 +431,10 @@
 				RelativePath=".\tests\server.js"
 				>
 			</File>
+			<File
+				RelativePath=".\tests\server.vbs"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

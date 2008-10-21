@@ -6,6 +6,7 @@
 #include "httpd_h.h"
 #include "registrymap.h"
 #include "resource.h"
+#include "httpd.h"
 
 extern CComModule _Module;
 
@@ -64,6 +65,11 @@ class ATL_NO_VTABLE Site :
   public ISupportErrorInfoImpl<&IID_ISite>
 {
 public:
+
+  //
+  // Create instance
+  //
+  static HRESULT Create(http_site* site, IDispatch** pDisp);
 
   //
   // Initialize instance
@@ -139,6 +145,53 @@ public:
   END_COM_MAP()
 
 };
+
+//////////////////////////////////////////////////////////////////////////
+
+class SitesVARIANT : 
+  public IEnumVARIANT,
+  public CComObjectRoot
+{
+public:
+
+  typedef http_daemon::site_iterator iter;
+
+  //
+  // Creation
+  //
+  static HRESULT Create(iter ii, iter it, iter ie, IUnknown** ppUnk);
+
+  //
+  // Implement IEnumVARIANT
+  //
+  HRESULT STDMETHODCALLTYPE Next(ULONG celt, VARIANT * rgVar, ULONG * pCeltFetched);           
+  HRESULT STDMETHODCALLTYPE Skip(ULONG celt);
+  HRESULT STDMETHODCALLTYPE Reset();
+  HRESULT STDMETHODCALLTYPE Clone(IEnumVARIANT ** ppEnum); 
+
+  //
+  // COM interface map
+  //
+  BEGIN_COM_MAP(SitesVARIANT)
+    COM_INTERFACE_ENTRY(IEnumVARIANT)
+  END_COM_MAP()
+
+  //
+  // Don't allow aggregation
+  //
+  DECLARE_NOT_AGGREGATABLE(SitesVARIANT) 
+
+private:
+
+  //
+  // Iterators
+  //
+  iter m_ii;
+  iter m_it;
+  iter m_ie;
+
+};
+
 
 //////////////////////////////////////////////////////////////////////////
 

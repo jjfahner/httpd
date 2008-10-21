@@ -27,10 +27,16 @@ function test()
   server.Sites.Add("test1");
   server.Sites.Add("test2");
 
-  // Enumerate sites
+  // Enumerate sites using count
   for(var i = 0; i < server.Sites.Count; ++i)
   {
     print(server.Sites(i).Name);
+  }
+
+  // Enumerate sites using IEnumVARIANT
+  for(var s in server.Sites)
+  {
+    print(s.Name);
   }
 
   // Retrieve it through the collection

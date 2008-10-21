@@ -25,7 +25,7 @@ library HTTPD
   //
   [
     uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2B1),
-    version(1.0), dual
+    version(1.0), dual, oleautomation
   ]
   interface IServer : IDispatch
   {
@@ -64,7 +64,7 @@ library HTTPD
   //
   [
     uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2B3),
-    version(1.0), dual
+    version(1.0), dual, oleautomation
   ]
   interface ISite : IDispatch
   {
@@ -107,7 +107,7 @@ library HTTPD
   //
   [
     uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2B5),
-    version(1.0), dual
+    version(1.0), dual, oleautomation
   ]
   interface ISites : IDispatch
   {
@@ -124,13 +124,26 @@ library HTTPD
     HRESULT Add([in] BSTR name, [out, retval] ISite** pSite);
   }
 
+  //
+  // Sites EnumVARIANT
+  //
+ 	[
+		uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2B6),
+		hidden,
+		helpstring("SitesVARIANT Class")
+	]
+	coclass SitesVARIANT
+	{
+		[default] interface IEnumVARIANT;
+	};
+
   //////////////////////////////////////////////////////////////////////////
   //
   // IRequest interface
   //
   [
     uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2BA),
-    version(1.0), dual
+    version(1.0), dual, oleautomation
   ]
   interface IRequest : IDispatch
   {
@@ -154,7 +167,7 @@ library HTTPD
   //
   [
     uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2BC),
-    version(1.0), dual
+    version(1.0), dual, oleautomation
   ]
   interface IResponse : IDispatch
   {
@@ -198,7 +211,7 @@ library HTTPD
   //
   [
     uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2BE),
-    version(1.0), dual
+    version(1.0)
   ]
   interface IResolver : IUnknown
   {
@@ -212,7 +225,7 @@ library HTTPD
   //
   [
     uuid(F1AF728E-F8BA-481e-B567-84FDFA05B2BF),
-    version(1.0), dual
+    version(1.0)
   ]
   interface IHandler : IUnknown
   {
