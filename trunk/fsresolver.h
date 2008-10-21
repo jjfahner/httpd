@@ -3,6 +3,8 @@
 
 #include "resolver.h"
 
+class http_site;
+
 //
 // Resolves requests within a filesystem
 //
@@ -13,7 +15,7 @@ public:
   //
   // Construction
   //
-   filesystem_resolver(String const& root);
+   filesystem_resolver(http_site* site, String const& root);
   ~filesystem_resolver();
 
   //
@@ -33,7 +35,10 @@ private:
   //
   bool resolve_updirs(String path);
 
-  // Filesystem root
+  //
+  // Members
+  //
+  http_site* m_site;
   String m_root;
 
 };

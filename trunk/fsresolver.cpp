@@ -2,8 +2,10 @@
 #include "fsresolver.h"
 #include "fshandler.h"
 #include "context.h"
+#include "site.h"
 
-filesystem_resolver::filesystem_resolver(String const& root) :
+filesystem_resolver::filesystem_resolver(http_site* site, String const& root) :
+m_site (site),
 m_root (root)
 {
 }
@@ -13,7 +15,7 @@ filesystem_resolver::~filesystem_resolver()
 }
 
 mime_handler* 
-filesystem_resolver::resolve(http_context&, String const& uri)
+filesystem_resolver::resolve(http_context& context, String const& uri)
 {
   // Fetch request path
   String path = uri;
@@ -38,6 +40,29 @@ filesystem_resolver::resolve(http_context&, String const& uri)
     return 0;
   }
   FindClose(hFind);
+
+
+  // Extract extension
+  String ext;
+  String::size_type es = uri.find_last_of(".");
+  String::size_type ss = uri.find_last_of("/");
+  if(es != String::npos && (ss == String::npos || ss < es))
+  {
+    ext = uri.substr(es + 1);
+  }
+
+  // Store uri and extension
+  context.resolved_uri = uri;
+  context.resolved_ext = ext;
+
+  // Retrieve specialized handler
+  if(http_site::mime_type const* mt = m_site->mime_type_from_ext(ext))
+  {
+    if(mt->m_handler)
+    {
+      return mt->m_handler;
+    }
+  }
 
   // Return new handler
   return new filesystem_handler(path, wfd);

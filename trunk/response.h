@@ -100,13 +100,13 @@ private:
   //
   // Member data
   //
-  connection&         m_con;
-  http_versions       m_ver;
-  String         m_status;
-  char                m_buffer[RESPONSE_BUFSIZE];
-  char*               m_bufptr;
-  response_states     m_state;
-  DWORD               m_start;
+  connection&     m_con;
+  http_versions   m_ver;
+  String          m_status;
+  char            m_buffer[RESPONSE_BUFSIZE];
+  char*           m_bufptr;
+  response_states m_state;
+  DWORD           m_start;
 };
 
 //
